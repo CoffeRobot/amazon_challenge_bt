@@ -13,7 +13,7 @@ Download the repository
 
 edit the folder name if you want
 
-   mv amazon-challenge-bt-nodes/ bt_actions/
+     mv amazon-challenge-bt-nodes/ bt_actions/
 
 
 ###Set up an Behavior Tree's action in C++
