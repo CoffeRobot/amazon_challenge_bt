@@ -15,7 +15,7 @@ Download the repository and build it (catkin_make).
 The file src/example_action_server.cpp is a template on how the your ROS node should look like it it performs and action (it is an action in the Behavior Tree).
 Your action is the Server and does stuff. The Behavior Tree is the Client and tells to all the Server which ones have to start (TICK) and which have to stop (HALT).
 
-Edit in example_action_server.cpp the executeCB procedure, adding your code to execute when the node is TICKED  and when is HALTED;
+Edit in example_action_server.cpp the executeCB procedure, adding your code to execute when the node is TICKED and when is HALTED. If the action is finished the node should send the return status (SUCCESS/FAILURE) calling setStatus(SUCCESS/FAILURE).
 
     void executeCB(const bt_actions::BTGoalConstPtr &goal)
 	  {
@@ -56,6 +56,10 @@ Edit in example_action_server.cpp the executeCB procedure, adding your code to e
 
 	   }
 
+
+
+
+###Set up an Behavior Tree condition in C++
 
 
 
