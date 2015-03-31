@@ -9,7 +9,16 @@ This package contains the ros nodes executing actions and conditions. These node
 
 ### How do I get set up? ###
 
-Download the repository and build it (catkin_make).
+Download the repository 
+
+     cd ~/catkin_ws/src
+     git clone https://miccol@bitbucket.org/miccol/amazon-challenge-bt-nodes.git
+
+(OPTIONAL) edit the folder name if you want
+
+
+     mv amazon-challenge-bt-nodes/ bt_actions/
+
 
 ###Set up an Behavior Tree's action in C++
 The file src/example_action_server.cpp is a template on how the your ROS node should look like it it performs and action (it is an action in the Behavior Tree).
@@ -163,13 +172,14 @@ Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the 
 
 /src/move_forward_server.cpp contains an example of an action tested on the NAO robot
 
-###Test Your Actions
+###Test Your Action
 
 Write your action (C++ or python) and then set as name 'action'
 i.e.: 
+
 in C++
 
-      ros::init(argc, argv, "action");
+    ros::init(argc, argv, "action");
 
 in python
 
