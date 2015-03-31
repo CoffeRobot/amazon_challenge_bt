@@ -88,46 +88,29 @@ Edit in example_action_server.py the execute_cb procedure, adding your code to e
 
 
 
-void executeCB(const bt_actions::BTGoalConstPtr &goal)
-		  {
-
-		    // publish info to the console for the user
-		    ROS_INFO("Starting Action");
-
-		    // start executing the action
-		    while(/*YOUR CONDITION*/)
-		    {
-		      // check that preempt has not been requested by the client
-		      if (as_.isPreemptRequested() || !ros::ok())
-		      {
-			ROS_INFO("Action Halted");
 
 
-		 /*
-			    HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
-		*/
+def execute_cb(self, goal):
+		    # publish info to the console for the user
+		    rospy.loginfo('Starting Action')
+		    
+		    # start executing the action
+		    while #your condition:
+		      # check that preempt has not been requested by the client
+		      if self._as.is_preempt_requested():
+			#HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
+			rospy.loginfo('Action Halted')
+			self._as.set_preempted()
+			success = False
+			break
 
-
-			// set the action state to preempted
-			as_.setPreempted();
-			success = false;
-			break;
-		      }
-
-
-		      ROS_INFO("Executing Action");
-		/*
-			  HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
-		*/
-
-		 //If the action succeeded
-		      setStatus(SUCCESS);
-		 //If the action Failed
-		      setStatus(FAILURE);
-
-		   }
-
-		  }
+		      	rospy.loginfo('Executing Action')      
+		      	#HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
+		      
+			#IF THE ACTION HAS SUCCEEDED
+			self.set_status('SUCCESS')
+			#IF THE ACTION HAS FAILED
+			self.set_status('FAILURE')
 
 
 
