@@ -104,8 +104,8 @@ def execute_cb(self, goal):
 			success = False
 			break
 
-		      	rospy.loginfo('Executing Action')      
-		      	#HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
+		      rospy.loginfo('Executing Action')      
+		      #HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
 		      
 			#IF THE ACTION HAS SUCCEEDED
 			self.set_status('SUCCESS')
