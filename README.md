@@ -60,9 +60,22 @@ Edit in example_action_server.cpp the executeCB procedure, adding your code to e
 
 
 ###Set up an Behavior Tree condition in C++
+The procedure is similar to the one above.
+The file src/example_condition_server.cpp is a template on how the your ROS node should look like when it checks a condition (it is a condition in the Behavior Tree).
+Your condition is the Server and checks stuff. The Behavior Tree is the Client and tells to all the Server which ones have to start (TICK) and which have to stop (HALT).
+
+Edit in example_condition_server.cpp the executeCB procedure, adding your code to execute when the node is TICKED (it is never halted). If the condition is satisfied then the condition returns the status setStatus(SUCCESS). If the condition is not satisfied then the condition returns the status setStatus(SUCCESS). 
+IMPORTANT! A condition is supposed to reply very fast. If it takes too much time (apporx more that  seconds), the node has to be defined as an action.
 
 
-
+		  void executeCB(const bt_actions::BTGoalConstPtr &goal)
+		  {
+		    if(/*condition satisfied*/){
+		    setStatus(SUCCESS);
+		    }else{
+		    setStatus(FAILURE);
+		    }
+		  }
 
 
 To gain familarity on how this works I wrote one example in C++ and one in python.
