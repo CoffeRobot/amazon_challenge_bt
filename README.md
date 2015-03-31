@@ -82,7 +82,9 @@ IMPORTANT! A condition is supposed to reply very fast. If it takes too much time
 		    }
 		  }
 
+Then set a name for your condition. The name has the be unique. It will be used bt the behavior tree to recognize it.
 
+       ros::init(argc, argv, /*name of your action as a std::string*/);
 
 ###Set up an Behavior Tree's action in python
 The file src/example_action_server.py is a template on how the your ROS node should look like it it performs and action (it is an action in the Behavior Tree).
@@ -117,9 +119,16 @@ Edit in example_action_server.py the execute_cb procedure, adding your code to e
 			self.set_status('FAILURE')
 
 
+Then set a name for your action. The name has the be unique. It will be used bt the behavior tree to recognize it.
+
+     rospy.init_node(#NAME OF YOUR ACTION)
+
+###Set up an Behavior Tree's condition in python
+TODO
 
 
-To gain familarity on how this works I wrote one example in C++ and one in python.
+
+To gain familarity on how this works there is one example in C++ and one in python.
     
 ###Example in C++ ###
 Run the Server
@@ -134,9 +143,35 @@ Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the 
 
 
 
+###Example in python ###
+Run the Server
+
+    roscd bt_action/src 
+    python example_action_server.py 
+
+Run the Client (Still in C++ but you don't modify this )
+
+    rosrun bt_action ActionClient 
+
+Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the program.
 
 
 
+###Test Your Action
+
+Write your action (C++ or python) and then set as name 'action'
+i.e.: 
+in C++
+
+      ros::init(argc, argv, "action");
+
+in python
+
+    rospy.init_node('action')
+
+Then run your node and the client (The client emulates the Behavior Tree)
+
+    rosrun bt_action ActionClient
 
 ### Contribution guidelines ###
 
