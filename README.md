@@ -57,6 +57,10 @@ Edit in example_action_server.cpp the executeCB procedure, adding your code to e
 	   }
 
 
+Then set a name for your action. The name has the be unique. It will be used bt the behavior tree to recognize it.
+
+       ros::init(argc, argv, /*name of your action as a std::string*/);
+
 
 
 ###Set up an Behavior Tree's condition in C++
@@ -90,7 +94,7 @@ Edit in example_action_server.py the execute_cb procedure, adding your code to e
 
 
 
-def execute_cb(self, goal):
+    def execute_cb(self, goal):
 		    # publish info to the console for the user
 		    rospy.loginfo('Starting Action')
 		    
@@ -98,14 +102,14 @@ def execute_cb(self, goal):
 		    while #your condition:
 		      # check that preempt has not been requested by the client
 		      if self._as.is_preempt_requested():
-			#HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
-			rospy.loginfo('Action Halted')
-			self._as.set_preempted()
-			success = False
-			break
+			  #HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
+			  rospy.loginfo('Action Halted')
+			  self._as.set_preempted()
+			  success = False
+			  break
 
-		      rospy.loginfo('Executing Action')      
-		      #HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
+		    rospy.loginfo('Executing Action')      
+		    #HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
 		      
 			#IF THE ACTION HAS SUCCEEDED
 			self.set_status('SUCCESS')
