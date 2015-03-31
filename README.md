@@ -167,6 +167,7 @@ Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the 
 
 Write your action (C++ or python) and then set as name 'action'
 i.e.: 
+
 in C++
 
       ros::init(argc, argv, "action");
