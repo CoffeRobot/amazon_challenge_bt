@@ -12,12 +12,12 @@ This package contains the ros nodes executing actions and conditions. These node
 Download the repository and build it (catkin_make).
 To gain familarity on how this works I wrote one example in C++ and one in python.
     
-    ###Example in C++ ###
-    Run the Server
-    $ rosrun bt_action Action 
-    Run the Client
-    $ rosrun bt_action ActionClient 
-     Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the program
+###Example in C++ ###
+Run the Server
+    rosrun bt_action Action 
+Run the Client
+    rosrun bt_action ActionClient 
+Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the program
 
 
 
