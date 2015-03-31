@@ -11,8 +11,7 @@ This package contains the ros nodes executing actions and conditions. These node
 
 Download the repository 
 
-     cd ~/catkin_ws
-
+     cd ~/catkin_ws/src
      git clone https://miccol@bitbucket.org/miccol/amazon-challenge-bt-nodes.git
 
 edit the folder name if you want
