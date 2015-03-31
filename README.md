@@ -9,7 +9,11 @@ This package contains the ros nodes executing actions and conditions. These node
 
 ### How do I get set up? ###
 
-Download the repository and build it (catkin_make).
+Download the repository 
+
+edit the folder name if you want
+ mv amazon-challenge-bt-nodes/ bt_actions/
+
 
 ###Set up an Behavior Tree's action in C++
 The file src/example_action_server.cpp is a template on how the your ROS node should look like it it performs and action (it is an action in the Behavior Tree).
