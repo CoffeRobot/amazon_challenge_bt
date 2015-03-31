@@ -17,7 +17,7 @@ Your action is the Server and does stuff. The Behavior Tree is the Client and te
 Edit in example action 
 
 
-  void executeCB(const bt_actions::BTGoalConstPtr &goal)
+      void executeCB(const bt_actions::BTGoalConstPtr &goal)
   {
 
     // publish info to the console for the user
