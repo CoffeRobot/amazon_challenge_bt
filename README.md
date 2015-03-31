@@ -11,9 +11,13 @@ This package contains the ros nodes executing actions and conditions. These node
 
 Download the repository 
 
+  git clone https://miccol@bitbucket.org/miccol/amazon-challenge-bt-nodes.git
+
 edit the folder name if you want
 
-     mv amazon-challenge-bt-nodes/ bt_actions/
+   cd ~/catkin_ws
+
+   mv amazon-challenge-bt-nodes/ bt_actions/
 
 
 ###Set up an Behavior Tree's action in C++
