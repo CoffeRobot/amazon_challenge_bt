@@ -16,44 +16,44 @@ Your action is the Server and does stuff. The Behavior Tree is the Client and te
 
 Edit in example action 
 
+void executeCB(const bt_actions::BTGoalConstPtr &goal)
+	  {
 
-      void executeCB(const bt_actions::BTGoalConstPtr &goal)
-  {
+	    // publish info to the console for the user
+	    ROS_INFO("Starting Action");
 
-    // publish info to the console for the user
-    ROS_INFO("Starting Action");
-
-    // start executing the action
-    while(/*YOUR CONDITION*/)
-    {
-      // check that preempt has not been requested by the client
-      if (as_.isPreemptRequested() || !ros::ok())
-      {
-        ROS_INFO("Action Halted");
-
-
-     /*
-            HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
-    */
+	    // start executing the action
+	    while(/*YOUR CONDITION*/)
+	    {
+	      // check that preempt has not been requested by the client
+	      if (as_.isPreemptRequested() || !ros::ok())
+	      {
+		ROS_INFO("Action Halted");
 
 
-        // set the action state to preempted
-        as_.setPreempted();
-        success = false;
-        break;
-      }
+	 /*
+		    HERE THE CODE TO EXECUTE WHEN THE  BEHAVIOR TREE DOES HALT THE ACTION
+	*/
 
 
-      ROS_INFO("Executing Action");
-    /*
-          HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
-    */
-    //If the action succeeded
-         setStatus(SUCCESS);
-    //If the action Failed
-         setStatus(FAILURE);
+		// set the action state to preempted
+		as_.setPreempted();
+		success = false;
+		break;
+	      }
 
-      }
+
+	      ROS_INFO("Executing Action");
+	/*
+		  HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
+	*/
+
+	 //If the action succeeded
+	      setStatus(SUCCESS);
+	//If the action Failed
+	      setStatus(FAILURE);
+
+	   }
 
 
 
