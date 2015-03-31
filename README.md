@@ -173,8 +173,10 @@ Then run your node and the client (The client emulates the Behavior Tree)
 
     rosrun bt_action ActionClient
 
-### Contribution guidelines ###
+### Test your condition
 
+
+TODO
 
 ### Who do I talk to? ###
 
