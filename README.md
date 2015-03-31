@@ -163,7 +163,7 @@ Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the 
 
 /src/move_forward_server.cpp contains an example of an action tested on the NAO robot
 
-###Test Your Actions
+###Test Your Action
 
 Write your action (C++ or python) and then set as name 'action'
 i.e.: 
