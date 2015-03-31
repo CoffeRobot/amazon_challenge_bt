@@ -170,7 +170,7 @@ i.e.:
 
 in C++
 
-      ros::init(argc, argv, "action");
+    ros::init(argc, argv, "action");
 
 in python
 
