@@ -11,12 +11,13 @@ This package contains the ros nodes executing actions and conditions. These node
 
 Download the repository and build it (catkin_make).
 
+###Set up an Behavior Tree action in C++
 The file src/example_action_server.cpp is a template on how the your ROS node should look like it it performs and action (it is an action in the Behavior Tree).
 Your action is the Server and does stuff. The Behavior Tree is the Client and tells to all the Server which ones have to start (TICK) and which have to stop (HALT).
 
 Edit in example action 
 
-void executeCB(const bt_actions::BTGoalConstPtr &goal)
+    void executeCB(const bt_actions::BTGoalConstPtr &goal)
 	  {
 
 	    // publish info to the console for the user
