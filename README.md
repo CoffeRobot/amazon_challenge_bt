@@ -14,7 +14,7 @@ Download the repository
      cd ~/catkin_ws/src
      git clone https://miccol@bitbucket.org/miccol/amazon-challenge-bt-nodes.git
 
-edit the folder name if you want
+(OPTIONAL) edit the folder name if you want
 
 
      mv amazon-challenge-bt-nodes/ bt_actions/
