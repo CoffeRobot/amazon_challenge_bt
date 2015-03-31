@@ -157,7 +157,13 @@ Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the 
 
 
 
-###Test Your Action
+###Examples used with the NAO robot
+
+/src/bumpers_ok_server.cpp contains an example of a condition tested on the NAO robot
+
+/src/move_forward_server.cpp contains an example of an action tested on the NAO robot
+
+###Test Your Actions
 
 Write your action (C++ or python) and then set as name 'action'
 i.e.: 
