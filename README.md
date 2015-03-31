@@ -48,13 +48,12 @@ Edit in example action
     /*
           HERE THE CODE TO EXECUTE AS LONG AS THE BEHAVIOR TREE DOES NOT HALT THE ACTION
     */
+    //If the action succeeded
+         setStatus(SUCCESS);
+    //If the action Failed
+         setStatus(FAILURE);
 
- //If the action succeeded
-      setStatus(SUCCESS);
-//If the action Failed
-      setStatus(FAILURE);
-
-   }
+      }
 
 
 
