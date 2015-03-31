@@ -51,7 +51,7 @@ Edit in example_action_server.cpp the executeCB procedure, adding your code to e
 
 	 //If the action succeeded
 	      setStatus(SUCCESS);
-	//If the action Failed
+	 //If the action Failed
 	      setStatus(FAILURE);
 
 	   }
@@ -70,10 +70,11 @@ IMPORTANT! A condition is supposed to reply very fast. If it takes too much time
 
 		  void executeCB(const bt_actions::BTGoalConstPtr &goal)
 		  {
-		    if(/*condition satisfied*/){
-		    setStatus(SUCCESS);
+		    if(/*condition satisfied*/)
+                    {
+		        setStatus(SUCCESS);
 		    }else{
-		    setStatus(FAILURE);
+		        setStatus(FAILURE);
 		    }
 		  }
 
