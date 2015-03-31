@@ -38,7 +38,7 @@ public:
 
 
   }
-  //void executeCB()
+
   void executeCB(const bt_actions::BTGoalConstPtr &goal)
   {
 

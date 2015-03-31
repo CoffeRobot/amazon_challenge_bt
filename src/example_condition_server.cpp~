@@ -41,11 +41,18 @@ public:
   }
   void executeCB(const bt_actions::BTGoalConstPtr &goal)
   {
+
+
+   {
+
+
     if(/*condition satisfied*/){
     setStatus(SUCCESS);
     }else{
     setStatus(FAILURE);
     }
+   }
+
   }
 
 
