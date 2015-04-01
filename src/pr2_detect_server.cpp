@@ -79,10 +79,9 @@ public:
       //r.sleep();
     }
 
-    if(success)
-    {
-        setStatus(SUCCESS);
-    }
+
+        setStatus(FAILURE);
+
   }
 
 
@@ -152,7 +151,7 @@ public:
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "action");
+  ros::init(argc, argv, "detect_object");
       ROS_INFO(" Enum: %d",RUNNING);
       ROS_INFO(" Action Ready for Ticks");
   BTAction bt_action(ros::this_node::getName());

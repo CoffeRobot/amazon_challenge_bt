@@ -10,7 +10,7 @@ int main (int argc, char **argv)
 
   // create the action client
   // true causes the client to spin its own thread
-  actionlib::SimpleActionClient<bt_actions::BTAction> ac("action", true);
+  actionlib::SimpleActionClient<bt_actions::BTAction> ac("condition", true);
 	bt_actions::BTResult node_result;
   ROS_INFO("Waiting for action server to start.");
   // wait for the action server to start

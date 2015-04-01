@@ -81,10 +81,9 @@ public:
       r.sleep();
     }
 
-    if(success)
-    {
-        setStatus(SUCCESS);
-    }
+
+        setStatus(FAILURE);
+
   }
 
   //! Sends the command to start a given trajectory
@@ -197,7 +196,7 @@ public:
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "action");
+  ros::init(argc, argv, "grasp_object");
       ROS_INFO(" Enum: %d",RUNNING);
       ROS_INFO(" Action Ready for Ticks");
   BTAction bt_action(ros::this_node::getName());
