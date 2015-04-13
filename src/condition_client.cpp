@@ -6,11 +6,11 @@
 
 int main (int argc, char **argv)
 {
-  ros::init(argc, argv, "test_action");
+  ros::init(argc, argv, "test_condition");
 
   // create the action client
   // true causes the client to spin its own thread
-  actionlib::SimpleActionClient<bt_actions::BTAction> ac("action", true);
+  actionlib::SimpleActionClient<bt_actions::BTAction> ac("listdone", true);
 	bt_actions::BTResult node_result;
   ROS_INFO("Waiting for action server to start.");
   // wait for the action server to start
@@ -37,13 +37,16 @@ bool isRunning = false;
 	  				ac.sendGoal(goal);
 					//ac.ClientGoalHandle();
                     isRunning=true;
-					//ac.waitForResult(ros::Duration(30.0));
+                    ac.waitForResult(ros::Duration(30.0));
                     node_result = *(ac.getResult());
                      ROS_INFO("Action finished, status: %d",node_result.status);
                 }else{
                     ROS_INFO("I am re-running the request");
                     ac.cancelGoal();
                     ac.sendGoal(goal);
+                    ac.waitForResult(ros::Duration(30.0));
+                    node_result = *(ac.getResult());
+
                      ROS_INFO("Action finished, status: %d",node_result.status);
                 }
 			break;
