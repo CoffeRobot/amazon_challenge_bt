@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>bt_actions</name>
+  <name>amazon_challenge_bt_actions</name>
   <version>0.0.0</version>
-  <description>The bt_actions package</description>
+  <description>The amazon_challenge_bt_actions package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
@@ -55,6 +55,7 @@
   <run_depend>rospy</run_depend>
   <run_depend>roslib</run_depend>
   <run_depend>std_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

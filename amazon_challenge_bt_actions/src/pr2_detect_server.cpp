@@ -2,7 +2,7 @@
 #include <actionlib/server/simple_action_server.h>
 #include <actionlib/client/simple_action_client.h>
 
-#include <bt_actions/BTAction.h>
+#include <amazon_challenge_bt_actions/BTAction.h>
 #include <pr2_controllers_msgs/PointHeadAction.h>
 typedef actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction> PointHeadClient;
 
@@ -16,11 +16,11 @@ private:
 
   ros::NodeHandle nh_;
   // NodeHandle instance must be created before this line. Otherwise strange error may occur.
-  actionlib::SimpleActionServer<bt_actions::BTAction> as_; 
+  actionlib::SimpleActionServer<amazon_challenge_bt_actions::BTAction> as_; 
   std::string action_name_;
   // create messages that are used to published feedback/result
-  bt_actions::BTFeedback feedback_;
-  bt_actions::BTResult result_;
+  amazon_challenge_bt_actions::BTFeedback feedback_;
+  amazon_challenge_bt_actions::BTResult result_;
 
 public:
 
@@ -43,7 +43,7 @@ public:
 
   }
   //void executeCB()
-  void executeCB(const bt_actions::BTGoalConstPtr &goal)
+  void executeCB(const amazon_challenge_bt_actions::BTGoalConstPtr &goal)
   {
     // helper variables
     ros::Rate r(1);

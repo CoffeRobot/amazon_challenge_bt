@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(bt_actions)
+project(amazon_challenge_bt_actions)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -72,8 +72,7 @@ add_definitions(-Wall -g -O0 -Wno-deprecated -static -Bstatic -std=gnu++0x)
 ## Generate actions in the 'action' folder
 add_action_files(
   DIRECTORY action
-  FILES BT.action
-  FILES ObjectsList.action
+  FILES BT.action ObjectsList.action
 )
 
 
@@ -146,7 +145,8 @@ target_link_libraries(
 
 add_dependencies(
  Action
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+  ${PROJECT_NAME}_generate_messages_cpp
 )
 
 
@@ -159,7 +159,8 @@ target_link_libraries(
 
 add_dependencies(
  Condition
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+  ${PROJECT_NAME}_generate_messages_cpp
 )
 
 
@@ -176,7 +177,8 @@ target_link_libraries(
 
 add_dependencies(
  ActionClient
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+  ${PROJECT_NAME}_generate_messages_cpp
 )
 
 
@@ -191,7 +193,8 @@ target_link_libraries(
 
 add_dependencies(
  ConditionClient
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+  ${PROJECT_NAME}_generate_messages_cpp
 )
 
 add_executable(DetectServer src/pr2_detect_server.cpp)
@@ -203,7 +206,7 @@ target_link_libraries(
 
 add_dependencies(
   DetectServer
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 
@@ -216,7 +219,7 @@ target_link_libraries(
 
 add_dependencies(
   GraspServer
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 
@@ -230,7 +233,7 @@ target_link_libraries(
 
 add_dependencies(
   DropServer
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 
@@ -258,7 +261,7 @@ target_link_libraries(
 
 add_dependencies(
   ObjectDetectedServer
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 add_executable(ObjectGraspedServer src/pr2_object_grasped_server.cpp)
@@ -270,7 +273,7 @@ target_link_libraries(
 
 add_dependencies(
   ObjectGraspedServer
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 
@@ -297,7 +300,7 @@ target_link_libraries(
 
 add_dependencies(
   ListDone
-  ${bt_actions_EXPORTED_TARGETS}
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
 

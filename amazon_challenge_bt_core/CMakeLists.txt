@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(bt)
+project(amazon_challenge_bt_core)
 
 # Needed for using threads
 
 #set(CMAKE_PREFIX_PATH ~/naoqi/naoqi-sdk-1.14.5-linux64)
 #set(LD_LIBRARY_PATH:~/naoqi/naoqi-sdk-1.14.5-linux64/lib)
-INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
+
 #set(ALPROXIES_DIR ~/naoqi/naoqi-sdk-1.14.5-linux64/share/cmake/alproxies)
 #INCLUDE_DIRECTORIES(${ALPROXIES_DIR})
 
@@ -20,7 +20,7 @@ INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
-	bt_actions
+  amazon_challenge_bt_actions
   message_generation
   roscpp
   rospy
@@ -55,26 +55,24 @@ generate_messages(
 
 catkin_package(
   CATKIN_DEPENDS actionlib_msgs
+  INCLUDE_DIRS include
 )
 
+INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS} include)
 
 
-# Including Headers and Sources
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/Headers ${PROJECT_SOURCE_DIR}/Sources)
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/Headers/Actions ${PROJECT_SOURCE_DIR}/Sources/Actions)
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/Headers/Conditions ${PROJECT_SOURCE_DIR}/Sources/Conditions)
 
-file(GLOB_RECURSE BTLibrary ${PROJECT_SOURCE_DIR}/Sources/*.cpp)
+file(GLOB_RECURSE BTLibrary src/*.cpp)
 
-add_executable(tree ${PROJECT_SOURCE_DIR}/main.cpp ${BTLibrary})
+add_executable(tree src/main.cpp ${BTLibrary})
 #target_link_libraries(tree ${catkin_LIBRARIES} ${ALPROXIES_LIBRARIES} ${ALVALUE_LIBRARIES})
-add_dependencies(tree beginner_tutorials_gencpp)
+add_dependencies(tree amazon_challenge_bt_actions_generate_messages_cpp)
 target_link_libraries(tree ${catkin_LIBRARIES})
 
 #add_executable(add_two_ints_server ${PROJECT_SOURCE_DIR}/src/add_two_ints_server.cpp)
 #target_link_libraries(add_two_ints_server ${catkin_LIBRARIES})
-#add_dependencies(add_two_ints_server beginner_tutorials_gencpp)
+#add_dependencies(add_two_ints_server beginner_tutorials_generate_message_cpp)
 
 #add_executable(add_two_ints_client ${PROJECT_SOURCE_DIR}/src/add_two_ints_client.cpp)
 #target_link_libraries(add_two_ints_client ${catkin_LIBRARIES})
-#add_dependencies(add_two_ints_client beginner_tutorials_gencpp)
+#add_dependencies(add_two_ints_client beginner_tutorials_generate_message_cpp)

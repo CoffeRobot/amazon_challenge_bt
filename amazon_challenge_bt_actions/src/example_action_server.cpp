@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include <actionlib/server/simple_action_server.h>// needed for actionlib
-#include <bt_actions/BTAction.h>//Definition of action. see /scr/action
+#include <amazon_challenge_bt_actions/BTAction.h>//Definition of action. see /scr/action
 
 
 
@@ -13,11 +13,11 @@ protected:
 
   ros::NodeHandle nh_;
   // NodeHandle instance must be created before this line. Otherwise strange error may occur.
-  actionlib::SimpleActionServer<bt_actions::BTAction> as_;
+  actionlib::SimpleActionServer<amazon_challenge_amazon_challenge_bt_actions::BTAction> as_;
   std::string action_name_;
   // create messages that are used to published feedback/result
-  bt_actions::BTFeedback feedback_; //action feedback (SUCCESS, FAILURE)
-  bt_actions::BTResult result_;//action feedback  (same as feedback for us)
+  amazon_challenge_bt_actions::BTFeedback feedback_; //action feedback (SUCCESS, FAILURE)
+  amazon_challenge_bt_actions::BTResult result_;//action feedback  (same as feedback for us)
 
 
 public:
@@ -39,7 +39,7 @@ public:
 
   }
 
-  void executeCB(const bt_actions::BTGoalConstPtr &goal)
+  void executeCB(const amazon_challenge_bt_actions::BTGoalConstPtr &goal)
   {
 
     // publish info to the console for the user

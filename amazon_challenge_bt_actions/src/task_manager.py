@@ -7,14 +7,13 @@ import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Int32
 
-# import roslib; roslib.load_manifest('bt_actions')
 import actionlib #needed to call receive_update whenever needed
-import bt_actions.msg #contains the action message for receive_update
+import amazon_challenge_bt_actions.msg #contains the action message for receive_update
 
 class TaskManager:
   # create messages that are used to publish feedback/result
-    _feedback = bt_actions.msg.ObjectsListFeedback()
-    _result   = bt_actions.msg.ObjectsListResult()
+    _feedback = amazon_challenge_bt_actions.msg.ObjectsListFeedback()
+    _result   = amazon_challenge_bt_actions.msg.ObjectsListResult()
    
     TASK_COMPLETED = 1
     TASK_CANCELLED = 2
@@ -27,7 +26,7 @@ class TaskManager:
         rospy.init_node('objectslist')
     	self._action_name = 'objectslist'
   	
-    	self._as = actionlib.SimpleActionServer(self._action_name, bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
+    	self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
 
 
     	self._as.start()

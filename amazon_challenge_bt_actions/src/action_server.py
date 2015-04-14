@@ -1,23 +1,23 @@
 #! /usr/bin/env python
 
-import roslib; roslib.load_manifest('bt_actions')
+
 import rospy
 
 import actionlib
 
-import bt_actions.msg
+import amazon_challenge_bt_actions.msg
 
 
 
 
 class BTAction(object):
   # create messages that are used to publish feedback/result
-  _feedback = bt_actions.msg.BTFeedback()
-  _result   = bt_actions.msg.BTResult()
+  _feedback = amazon_challenge_bt_actions.msg.BTFeedback()
+  _result   = amazon_challenge_bt_actions.msg.BTResult()
 
   def __init__(self, name):
     self._action_name = name
-    self._as = actionlib.SimpleActionServer(self._action_name, bt_actions.msg.BTAction, execute_cb=self.execute_cb, auto_start = False)
+    self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.BTAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
     
   def execute_cb(self, goal):
