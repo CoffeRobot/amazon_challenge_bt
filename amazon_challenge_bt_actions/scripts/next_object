@@ -1,11 +1,11 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 
 import rospy
 
 import actionlib
 
-import amazon_challenge_amazon_challenge_bt_actions.msg
+import amazon_challenge_bt_actions.msg
 
 
 
@@ -48,7 +48,7 @@ class BTAction(object):
       client.wait_for_server()
 
         # Creates a goal to send to the action server.
-      goal = amazon_challenge_bt_actions.msg.ObjectsListGoal(parameter=1)
+      goal = amazon_challenge_bt_actions.msg.ObjectsListGoal(parameter=3)
 
             # Sends the goal to the action server.
       client.send_goal(goal)
@@ -81,6 +81,6 @@ class BTAction(object):
 
 
 if __name__ == '__main__':
-  rospy.init_node('remove_object')
+  rospy.init_node('next_object')
   BTAction(rospy.get_name())
   rospy.spin()
