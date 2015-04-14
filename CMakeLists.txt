@@ -235,17 +235,17 @@ add_dependencies(
 
 
 
-add_executable(PoseArmServer src/pr2_pose_arm_server.cpp)
+# add_executable(PoseArmServer src/pr2_pose_arm_server.cpp)
 
-target_link_libraries(
-  PoseArmServer
-  ${catkin_LIBRARIES}
-)
+# target_link_libraries(
+#   PoseArmServer
+#   ${catkin_LIBRARIES}
+# )
 
-add_dependencies(
-  PoseArmServer
-  ${bt_actions_EXPORTED_TARGETS}
-)
+# add_dependencies(
+#   PoseArmServer
+#   ${bt_actions_EXPORTED_TARGETS}
+# )
 
 
 
@@ -274,17 +274,17 @@ add_dependencies(
 )
 
 
-add_executable(ArmPosedServer src/pr2_arm_posed_server.cpp)
+# add_executable(ArmPosedServer src/pr2_arm_posed_server.cpp)
 
-target_link_libraries(
-  ArmPosedServer
-  ${catkin_LIBRARIES}
-)
+# target_link_libraries(
+#   ArmPosedServer
+#   ${catkin_LIBRARIES}
+# )
 
-add_dependencies(
-  ArmPosedServer
-  ${bt_actions_EXPORTED_TARGETS}
-)
+# add_dependencies(
+#   ArmPosedServer
+#   ${bt_actions_EXPORTED_TARGETS}
+# )
 
 
 

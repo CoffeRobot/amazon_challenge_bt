@@ -1,11 +1,13 @@
-__author__ = 'alessandro'
+#!/usr/bin/env python
+
+# __author__ = 'alessandro'
 
 import json
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Int32
 
-import roslib; roslib.load_manifest('bt_actions')
+# import roslib; roslib.load_manifest('bt_actions')
 import actionlib #needed to call receive_update whenever needed
 import bt_actions.msg #contains the action message for receive_update
 
@@ -113,7 +115,7 @@ class TaskManager:
 
 
 task_manager = TaskManager()
-task_manager.read_json_list('./example.json')
+task_manager.read_json_list('/home/fevb/amazon_challenge_ws/src/bt_actions/src/example.json')
 task_manager.publish_next_task()
 
 
