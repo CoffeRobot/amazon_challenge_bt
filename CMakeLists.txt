@@ -9,7 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   message_generation
   roscpp
-roslib
+  roslib
+  tf
   rospy
   std_msgs
 )
@@ -72,6 +73,7 @@ add_definitions(-Wall -g -O0 -Wno-deprecated -static -Bstatic -std=gnu++0x)
 add_action_files(
   DIRECTORY action
   FILES BT.action
+  FILES ObjectsList.action
 )
 
 
@@ -148,6 +150,22 @@ add_dependencies(
 )
 
 
+add_executable(Condition src/condition_server.cpp)
+
+target_link_libraries(
+  Condition
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+ Condition
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+
+
 
 add_executable(ActionClient src/action_client.cpp)
 
@@ -158,6 +176,127 @@ target_link_libraries(
 
 add_dependencies(
  ActionClient
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+
+add_executable(ConditionClient src/condition_client.cpp)
+
+target_link_libraries(
+  ConditionClient
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+ ConditionClient
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+add_executable(DetectServer src/pr2_detect_server.cpp)
+
+target_link_libraries(
+  DetectServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  DetectServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+add_executable(GraspServer src/pr2_grasp_server.cpp)
+
+target_link_libraries(
+  GraspServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  GraspServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+add_executable(DropServer src/pr2_drop_server.cpp)
+
+target_link_libraries(
+  DropServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  DropServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+add_executable(PoseArmServer src/pr2_pose_arm_server.cpp)
+
+target_link_libraries(
+  PoseArmServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  PoseArmServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+add_executable(ObjectDetectedServer src/pr2_object_detected_server.cpp)
+
+target_link_libraries(
+  ObjectDetectedServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ObjectDetectedServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+add_executable(ObjectGraspedServer src/pr2_object_grasped_server.cpp)
+
+target_link_libraries(
+  ObjectGraspedServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ObjectGraspedServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+add_executable(ArmPosedServer src/pr2_arm_posed_server.cpp)
+
+target_link_libraries(
+  ArmPosedServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ArmPosedServer
+  ${bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+add_executable(ListDone src/list_done.cpp)
+
+target_link_libraries(
+  ListDone
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ListDone
   ${bt_actions_EXPORTED_TARGETS}
 )
 

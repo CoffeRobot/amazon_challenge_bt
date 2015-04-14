@@ -81,6 +81,6 @@ class BTAction(object):
 
 
 if __name__ == '__main__':
-  rospy.init_node('action')
+  rospy.init_node('next_object')
   BTAction(rospy.get_name())
   rospy.spin()

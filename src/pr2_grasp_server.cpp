@@ -82,7 +82,7 @@ public:
     }
 
 
-        setStatus(FAILURE);
+        setStatus(SUCCESS);
 
   }
 
@@ -140,6 +140,7 @@ public:
     // Second trajectory point
     // Positions
     ind += 1;
+
     goal.trajectory.points[ind].positions.resize(7);
     goal.trajectory.points[ind].positions[0] = -0.3;
     goal.trajectory.points[ind].positions[1] = 0.2;
