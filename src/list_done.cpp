@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 {
 
 
-    ros::init(argc, argv, "listdone");
+    ros::init(argc, argv, "list_done");
     ROS_INFO(" Enum: %d",RUNNING);
     ROS_INFO(" Condition Ready for Ticks");
     ros::NodeHandle n;

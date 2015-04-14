@@ -82,7 +82,7 @@ public:
     }
 
 
-        setStatus(FAILURE);
+        setStatus(SUCCESS);
 
   }
 
