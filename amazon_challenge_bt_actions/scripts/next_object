@@ -6,7 +6,7 @@ import rospy
 import actionlib
 
 import amazon_challenge_bt_actions.msg
-
+from std_msgs.msg import String
 
 
 class BTAction(object):
