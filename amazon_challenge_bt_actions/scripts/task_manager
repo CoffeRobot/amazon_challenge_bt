@@ -7,6 +7,7 @@ from std_msgs.msg import Int32
 
 import actionlib #needed to call receive_update whenever needed
 import amazon_challenge_bt_actions.msg #contains the action message for receive_update
+import rospkg
 
 class TaskManager:
   # create messages that are used to publish feedback/result
@@ -112,7 +113,10 @@ class TaskManager:
 
 
 task_manager = TaskManager()
-task_manager.read_json_list('/home/michele/amazon_challenge_ws/src/amazon_challenge_bt/amazon_challenge_bt_actions/src/example.json')
+rp = rospkg.RosPack()
+json_path = rp.get_path('amazon_challenge_bt_actions')
+json_path = json_path + '/src/example.json'
+task_manager.read_json_list(json_path)
 task_manager.publish_next_task()
 
 
