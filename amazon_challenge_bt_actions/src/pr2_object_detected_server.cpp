@@ -7,6 +7,7 @@
 enum Status { RUNNING, SUCCESS, FAILURE};
 
 std::string value;// I should do a mutex here but it is only for demostration now
+boost::mutex mtx_; // explicit mutex declaration The value of the condition is read by the main thread but written by the listener
 
 class BTAction
 {
@@ -86,15 +87,19 @@ public:
   }
 
 
-
+  std::string GetConditionValue() {
+      boost::lock_guard<boost::mutex> guard(mtx_);
+      return value;
+  }
 
 };
 
 void chatterCallback(const std_msgs::String::ConstPtr& msg)
 {
+ boost::lock_guard<boost::mutex> guard(mtx_);
+ //ROS_INFO("I heard: [%s]", msg->data.c_str());
  value = msg->data.c_str();
 }
-
 
 int main(int argc, char** argv)
 {

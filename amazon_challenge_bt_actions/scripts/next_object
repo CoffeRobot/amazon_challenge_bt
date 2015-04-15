@@ -18,6 +18,11 @@ class BTAction(object):
     self._action_name = name
     self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.BTAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
+    self.pub_detected = rospy.Publisher('object_detected', String, queue_size = 0)
+    self.pub_posed = rospy.Publisher('arm_posed', String, queue_size = 0)
+    self.pub_grasped = rospy.Publisher('object_grasped', String, queue_size = 0)    
+    self.pub_dropped = rospy.Publisher('object_dropped', String, queue_size = 0)
+    self.pub_rate = rospy.Rate(30)
     
   def execute_cb(self, goal):
     # helper variables
@@ -55,6 +60,12 @@ class BTAction(object):
       rospy.loginfo('Goal Sent')
             # Waits for the server to finish performing the action.
       client.wait_for_result()
+      self.pub_detected.publish("FAILURE")#resets the conditions for the current ojbect
+      self.pub_posed.publish("FAILURE")
+      self.pub_grasped.publish("FAILURE")
+      self.pub_dropped.publish("FAILURE")
+      self.pub_rate.sleep()
+
       self.set_status('SUCCESS')
       # this step is not necessary, the sequence is computed at 1 Hz for demonstration purposes
       r.sleep()
@@ -81,6 +92,6 @@ class BTAction(object):
 
 
 if __name__ == '__main__':
-  rospy.init_node('next_object')
+  rospy.init_node('remove_object')
   BTAction(rospy.get_name())
   rospy.spin()

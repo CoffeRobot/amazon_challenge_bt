@@ -112,7 +112,7 @@ class TaskManager:
 
 
 task_manager = TaskManager()
-task_manager.read_json_list('/home/fevb/amazon_challenge_ws/src/bt_actions/src/example.json')
+task_manager.read_json_list('/home/michele/amazon_challenge_ws/src/amazon_challenge_bt/amazon_challenge_bt_actions/src/example.json')
 task_manager.publish_next_task()
 
 
