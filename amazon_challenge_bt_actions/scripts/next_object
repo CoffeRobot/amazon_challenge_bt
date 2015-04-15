@@ -18,10 +18,10 @@ class BTAction(object):
     self._action_name = name
     self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.BTAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
-    self.pub_detected = rospy.Publisher('object_detected', String, queue_size = 0)
-    self.pub_posed = rospy.Publisher('arm_posed', String, queue_size = 0)
-    self.pub_grasped = rospy.Publisher('object_grasped', String, queue_size = 0)    
-    self.pub_dropped = rospy.Publisher('object_dropped', String, queue_size = 0)
+    self.pub_detected = rospy.Publisher('object_detected', String, queue_size = 10)
+    self.pub_posed = rospy.Publisher('arm_posed', String, queue_size = 10)
+    self.pub_grasped = rospy.Publisher('object_grasped', String, queue_size = 10)    
+    self.pub_dropped = rospy.Publisher('object_dropped', String, queue_size = 10)
     self.pub_rate = rospy.Rate(30)
     
   def execute_cb(self, goal):
