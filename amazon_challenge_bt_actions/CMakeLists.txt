@@ -72,7 +72,7 @@ add_definitions(-Wall -g -O0 -Wno-deprecated -static -Bstatic -std=gnu++0x)
 ## Generate actions in the 'action' folder
 add_action_files(
   DIRECTORY action
-  FILES BT.action ObjectsList.action
+  FILES BT.action ObjectsList.action Detector.action
 )
 
 
@@ -273,6 +273,20 @@ target_link_libraries(
 
 add_dependencies(
   ObjectGraspedServer
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+add_executable(ArmPosedServer src/pr2_arm_posed_server.cpp)
+
+target_link_libraries(
+  ArmPosedServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ArmPosedServer
   ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 

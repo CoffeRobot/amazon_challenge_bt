@@ -24,9 +24,12 @@ int main(int argc, char **argv)
     try
     {
         SequenceNode* sequence1 = new SequenceNode("seq1");
+        SequenceNode* sequence2 = new SequenceNode("seq2");
         SelectorNode* root = new SelectorNode("root");
         SelectorNode* selector1 = new SelectorNode("sel1");
         SelectorNode* selector2 = new SelectorNode("sel2");
+
+        ParallelNode* parallel1 = new ParallelNode("par1");
 
 
         //ActionNode* actTest = new ActionTestNode("move");
@@ -37,10 +40,10 @@ int main(int argc, char **argv)
 
 
 
-    ActionNode* detect = new ROSAction("detect_object");
-    ActionNode* grasp = new ROSAction("arm_position_server");
+    ActionNode* detect = new ROSAction("detector_node");
+    ActionNode* grasp = new ROSAction("grasp_object");
     ActionNode* drop = new ROSAction("drop_object");
-    ActionNode* posearm = new ROSAction("pose_arm");
+    ActionNode* posearm = new ROSAction("arm_position_server");
     ActionNode* remove = new ROSAction("remove_object");
 
 
@@ -69,15 +72,23 @@ int main(int argc, char **argv)
     root->AddChild(sequence1);
 */
 
+   // parallel1->AddChild(detect);
+    //parallel1->AddChild(grasp);
+
+    //parallel1->SetThreashold(2);
+    selector1->AddChild(armposed);
+    selector1->AddChild(posearm);
     selector2->AddChild(grasped);
     selector2->AddChild(grasp);
 
-    // sequence1->AddChild(selector1);
+    sequence1->AddChild(selector1);
     sequence1->AddChild(selector2);
     sequence1->AddChild(remove);
 
     root->AddChild(done);
     root->AddChild(sequence1);
+    //root->AddChild(grasp);
+
 
 
         while(ros::ok())
