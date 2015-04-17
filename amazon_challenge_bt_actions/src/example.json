@@ -55,15 +55,17 @@
   [
     {
       "bin": "bin_G",
-      "item": "amazon_cheeze"
+      "item": "amazon_crayon"
     },
-    {
-      "bin": "bin_H",
-      "item": "amazon_cheeze"
-    },
+
     {
       "bin": "bin_I",
-      "item": "amazon_cheeze"
+      "item": "amazon_crayon"
+    },
+
+    {
+      "bin": "bin_H",
+      "item": "amazon_crayon"
     }
   ]
 }

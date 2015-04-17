@@ -224,17 +224,17 @@ add_dependencies(
 
 
 
-add_executable(DropServer src/pr2_drop_server.cpp)
+#add_executable(DropServer src/pr2_drop_server.cpp)
 
-target_link_libraries(
-  DropServer
-  ${catkin_LIBRARIES}
-)
+#target_link_libraries(
+#  DropServer
+#  ${catkin_LIBRARIES}
+#)
 
-add_dependencies(
-  DropServer
-  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
-)
+#add_dependencies(
+#  DropServer
+#  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+#)
 
 
 
@@ -264,6 +264,21 @@ add_dependencies(
   ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
 
+add_executable(ObjectDroppedServer src/pr2_object_dropped_server.cpp)
+
+target_link_libraries(
+  ObjectDroppedServer
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  ObjectDroppedServer
+  ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
+)
+
+
+
+
 add_executable(ObjectGraspedServer src/pr2_object_grasped_server.cpp)
 
 target_link_libraries(
@@ -289,6 +304,9 @@ add_dependencies(
   ArmPosedServer
   ${amazon_challenge_bt_actions_EXPORTED_TARGETS}
 )
+
+
+
 
 
 # add_executable(ArmPosedServer src/pr2_arm_posed_server.cpp)

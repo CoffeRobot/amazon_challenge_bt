@@ -28,6 +28,7 @@ int main(int argc, char **argv)
         SelectorNode* root = new SelectorNode("root");
         SelectorNode* selector1 = new SelectorNode("sel1");
         SelectorNode* selector2 = new SelectorNode("sel2");
+        SelectorNode* selector3 = new SelectorNode("sel3");
 
         ParallelNode* parallel1 = new ParallelNode("par1");
 
@@ -51,7 +52,7 @@ int main(int argc, char **argv)
     ConditionNode* grasped = new ROSCondition("object_grasped");
     ConditionNode* armposed = new ROSCondition("arm_posed");
 
-    //ConditionNode* dropped = new ROSCondition("object_dropped");
+    ConditionNode* dropped = new ROSCondition("object_dropped");
     ConditionNode* done = new ROSCondition("list_done");
 
 
@@ -80,6 +81,9 @@ int main(int argc, char **argv)
     selector1->AddChild(posearm);
     selector2->AddChild(grasped);
     selector2->AddChild(grasp);
+
+    selector3->AddChild(dropped);
+    selector3->AddChild(drop);
 
     sequence1->AddChild(selector1);
     sequence1->AddChild(selector2);
