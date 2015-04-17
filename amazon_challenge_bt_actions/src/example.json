@@ -54,18 +54,8 @@
   "work_order":
   [
     {
-      "bin": "bin_G",
-      "item": "amazon_crayon"
-    },
-
-    {
-      "bin": "bin_I",
-      "item": "amazon_crayon"
-    },
-
-    {
       "bin": "bin_H",
-      "item": "amazon_crayon"
+      "item": "amazon_cheeze"
     }
   ]
 }

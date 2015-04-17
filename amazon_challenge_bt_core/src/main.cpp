@@ -87,6 +87,8 @@ int main(int argc, char **argv)
 
     sequence1->AddChild(selector1);
     sequence1->AddChild(selector2);
+    sequence1->AddChild(selector3);
+
     sequence1->AddChild(remove);
 
     root->AddChild(done);
