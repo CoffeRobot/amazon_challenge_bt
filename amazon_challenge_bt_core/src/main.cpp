@@ -4,6 +4,7 @@
 
 
 
+
 using namespace BT;
 
 // Global robot variable
@@ -19,18 +20,12 @@ int main(int argc, char **argv)
     // ros::Subscriber Subscriber = Handle.subscribe<std_msgs::UInt8>("Inputs", 10, chatterCallback);
 
     // ros::spin();
+    bool reactiveBT = false;
     int TickPeriod_milliseconds = 100;
 
     try
     {
-        SequenceNode* sequence1 = new SequenceNode("seq1");
-        SequenceNode* sequence2 = new SequenceNode("seq2");
-        SelectorNode* root = new SelectorNode("root");
-        SelectorNode* selector1 = new SelectorNode("sel1");
-        SelectorNode* selector2 = new SelectorNode("sel2");
-        SelectorNode* selector3 = new SelectorNode("sel3");
 
-        ParallelNode* parallel1 = new ParallelNode("par1");
 
 
         //ActionNode* actTest = new ActionTestNode("move");
@@ -77,23 +72,61 @@ int main(int argc, char **argv)
     //parallel1->AddChild(grasp);
 
     //parallel1->SetThreashold(2);
-    selector1->AddChild(armposed);
-    selector1->AddChild(posearm);
-    selector2->AddChild(grasped);
-    selector2->AddChild(grasp);
+    ControlNode* root;
 
-    selector3->AddChild(dropped);
-    selector3->AddChild(drop);
+    if (reactiveBT)
+    {
+        SequenceNode* sequence1 = new SequenceNode("seq1");
+        SequenceNode* sequence2 = new SequenceNode("seq2");
+        root = new SelectorNode("root");
+        SelectorNode* selector1 = new SelectorNode("sel1");
+        SelectorNode* selector2 = new SelectorNode("sel2");
+        SelectorNode* selector3 = new SelectorNode("sel3");
 
-    sequence1->AddChild(selector1);
-    sequence1->AddChild(selector2);
-    sequence1->AddChild(selector3);
+        ParallelNode* parallel1 = new ParallelNode("par1");
+        selector1->AddChild(armposed);
+        selector1->AddChild(posearm);
+        selector2->AddChild(grasped);
+        selector2->AddChild(grasp);
 
-    sequence1->AddChild(remove);
+        selector3->AddChild(dropped);
+        selector3->AddChild(drop);
 
-    root->AddChild(done);
-    root->AddChild(sequence1);
-    //root->AddChild(grasp);
+        sequence1->AddChild(selector1);
+        sequence1->AddChild(selector2);
+        sequence1->AddChild(selector3);
+
+        sequence1->AddChild(remove);
+
+        root->AddChild(done);
+        root->AddChild(sequence1);
+
+    }else
+     {
+
+        SequenceStarNode* sequence1 = new SequenceStarNode("seq1");
+       // SequenceStarNode* sequence2 = new SequenceStarNode("seq2");
+        //root = new SelectorStarNode("root");
+        //SelectorStarNode* selector1 = new SelectorStarNode("sel1");
+        root = new SelectorStarNode("root");
+
+
+        sequence1->AddChild(posearm);
+        sequence1->AddChild(grasp);
+        sequence1->AddChild(drop);
+
+        sequence1->AddChild(remove);
+
+        root->AddChild(done);
+        root->AddChild(sequence1);
+
+    }
+
+
+
+
+
+        //root->AddChild(grasp);
 
 
 

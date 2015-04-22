@@ -5,6 +5,9 @@
 #include <amazon_challenge_bt_core/SelectorNode.h>
 #include <amazon_challenge_bt_core/SequenceNode.h>
 
+#include <amazon_challenge_bt_core/SelectorStarNode.h>
+#include <amazon_challenge_bt_core/SequenceStarNode.h>
+
 #include <amazon_challenge_bt_core/Actions/ActionTestNode.h>
 #include <amazon_challenge_bt_core/Conditions/ConditionTestNode.h>
 #include <amazon_challenge_bt_core/Actions/ROSAction.h>

@@ -52,10 +52,10 @@
   },
 
   "work_order":
-  [
+  [  
     {
       "bin": "bin_H",
-      "item": "amazon_cheeze"
+      "item": "cheezit_big_original"
     }
   ]
 }
