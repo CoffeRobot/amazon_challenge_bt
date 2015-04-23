@@ -19,7 +19,7 @@ namespace BT
     // - "Selector" indicates that the two node are children of a selector node;
     // - "Sequence" same as above, but with a sequence node as father;
     enum NodeType {Action, Condition, Control};
-    enum NodeTypes {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, ACTION, CONDITION,EMPTY};
+    enum NodeTypes {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, ACTION, CONDITION,DECORATOR};
     // Enumerates the states every node can be in after execution during a particular
     // time step:
     // - "Success" indicates that the node has completed running during this time step;
@@ -88,13 +88,14 @@ namespace BT
         NodeState GetNodeState();
         void SetNodeState(NodeState StateToBeSet);
         void SetColorState(NodeState ColorStateToBeSet);
-	void ResetColorState();
+
         // Methods used to access the node state without the
         // conditional waiting (only mutual access)
         NodeState ReadState();
         NodeState ReadColorState();
 	virtual int GetType() = 0;
         virtual bool WriteState(NodeState StateToBeSet) = 0;
+	virtual void ResetColorState() = 0;
     };
 }
 

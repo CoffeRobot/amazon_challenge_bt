@@ -5,7 +5,6 @@ using namespace BT;
 ActionTestNode::ActionTestNode(std::string Name) : ActionNode::ActionNode(Name)
 {
     Type = Action;
-
     // Thread start
     Thread = boost::thread(&ActionTestNode::Exec, this);
 }
@@ -52,7 +51,7 @@ void ActionTestNode::Exec()
         else
         {
             // trying to set the outcome state:
-            if (WriteState(Success) != true)
+            if (WriteState(status_) != true)
             {
                 // meanwhile, my father halted me!
                 std::cout << Name << " Halted!" << std::endl;
@@ -100,4 +99,6 @@ bool ActionTestNode::Halt()
 }
 
 
-
+void ActionTestNode::SetBehavior(NodeState status){
+    status_ = status;
+}

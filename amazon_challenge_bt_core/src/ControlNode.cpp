@@ -56,6 +56,7 @@ std::vector<TreeNode*> ControlNode::GetChildren()
 
 void ControlNode::ResetColorState()
 {
+
     SetColorState(Idle);
     for(int i = 0; i < ChildNodes.size(); i++)
     {

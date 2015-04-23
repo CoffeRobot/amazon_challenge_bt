@@ -81,12 +81,7 @@ void TreeNode::SetColorState(NodeState ColorStateToBeSet)
     ColorState = ColorStateToBeSet;
 }
 
-void TreeNode::ResetColorState()
-{
-    // Lock acquistion
 
-    ColorState = Idle;
-}
 
 /*
 int TreeNode::GetType()

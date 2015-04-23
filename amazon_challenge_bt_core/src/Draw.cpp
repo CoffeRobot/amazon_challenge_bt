@@ -89,6 +89,9 @@ void draw_node(float x, float y, int node_type, const char *leafName, int status
     case BT::PARALLEL:
         drawString(font, "=", (x - NODE_WIDTH + 0.01), (y - NODE_HEIGHT/2), 0);
         break;
+    case BT::DECORATOR:
+        drawString(font, "D", (x - NODE_WIDTH + 0.01), (y - NODE_HEIGHT/2), 0);
+        break;
     case BT::ACTION:
        {
             std::string st(leafName,0, 15);

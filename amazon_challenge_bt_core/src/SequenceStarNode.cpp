@@ -32,6 +32,7 @@ void SequenceStarNode::Exec()
 
         if(ReadState() == Exit)
         {
+            i = 0;
             // The behavior tree is going to be destroied
             return;
         }
@@ -89,11 +90,16 @@ void SequenceStarNode::Exec()
                 // 3) if the child state is not a success:
                 if(ChildStates[i] != Success)
                 {
+
+
                     // 3.1) the node state is equal to it;
                     SetNodeState(ChildStates[i]);
                     // 3.2) state reset;
                     WriteState(Idle);
-
+                    if (ChildStates[i] == Failure)
+                    {
+                        i = 0; // Final State of rhe selector node. Child index reinitialized
+                    }
                     // 3.3) all the next action or control child nodes must be halted:
                  /*   for(int j=i+1; j<M; j++)
                     {
@@ -146,10 +152,9 @@ void SequenceStarNode::Exec()
                 } else if (ChildStates[i] == Success) //If the child i returns success, the sequence star node can tick the next child
                 {
                     i++;
-                }else if (ChildStates[i] == Failure)
-                {
-                    i = 0; // Final State of rhe selector node. Child index reinitialized
                 }
+
+
 
             }
 

@@ -88,12 +88,17 @@ void SelectorStarNode::Exec()
                 // 3) if the child state is not a success:
                 if(ChildStates[i] != Failure)
                 {
+
+
                     // 3.1) the node state is equal to it;
                     SetNodeState(ChildStates[i]);
 
                     // 3.2) state reset;
                     WriteState(Idle);
-
+                    if (ChildStates[i] == Success)
+                    {
+                     i = 0; // Final State of rhe selector node. Child index reinitialized
+                     }
                     // 3.3) all the next action or control child nodes must be halted:
                    /* for(int j=i+1; j<M; j++)
                     {
@@ -144,9 +149,6 @@ void SelectorStarNode::Exec()
                 } else if(ChildStates[i] == Failure)//if child i has failed the selector star node can tick the next child
                 {
                     i ++;
-                }else if (ChildStates[i] == Success)
-                {
-                    i = 0; // Final State of rhe selector node. Child index reinitialized
                 }
             }
 
