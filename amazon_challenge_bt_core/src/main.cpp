@@ -19,11 +19,6 @@ ActionNode* drop;
 ActionNode* posearm;
 ActionNode* removeobject;
 
-ActionTestNode* test1;
-ActionTestNode* test2;
-ActionTestNode* test3;
-ActionTestNode* test4;
-
 
 
 ConditionNode* detected;
@@ -41,11 +36,8 @@ float b_color = 1;
 
 bool reactiveBT = false;
 
-
 SequenceStarNode* sequence1;
-//SelectorStarNode* root;
-
-SequenceStarNode* root;
+SelectorStarNode* root;
 DecoratorRetryNode* dec;
 
 
@@ -100,11 +92,16 @@ void updateTree(TreeNode* tree, GLfloat x_pos, GLfloat y_pos, GLfloat x_offset, 
     }
 }
 
-
+void timerCB(int millisec)
+{
+glutTimerFunc(millisec, timerCB, millisec);
+glutPostRedisplay();
+}
 void display()
 {
 
     glClearColor( r_color, g_color, b_color, 0.1);
+    glutTimerFunc(50, timerCB, 50); // draw every 50 ms
 
     // clear the draw buffer .
     glClear(GL_COLOR_BUFFER_BIT);   // Erase everything
@@ -117,44 +114,45 @@ void display()
 
 void processSpecialKeys(int key, int xx, int yy) {
 
-    float fraction = 0.1f;
+    float pos_fraction = 0.05f;
+    float col_fraction = 0.1f;
 
     switch (key) {
         case GLUT_KEY_UP :
-            y +=  fraction;
+            y +=  pos_fraction;
             break;
         case GLUT_KEY_DOWN :
-            y -=  fraction;
+            y -=  pos_fraction;
             break;
         case GLUT_KEY_LEFT:
-            x -=  fraction;
+            x -=  pos_fraction;
             break;
         case GLUT_KEY_RIGHT:
-            x +=  fraction;
+            x +=  pos_fraction;
             break;
         case  GLUT_KEY_PAGE_UP:
-         x_offset +=  fraction;
+         x_offset +=  pos_fraction;
             break;
         case  GLUT_KEY_PAGE_DOWN:
-        if (x_offset > 0.1+fraction) x_offset -=  fraction; //Avoid negative offset
+        if (x_offset > 0.1+pos_fraction) x_offset -=  pos_fraction; //Avoid negative offset
             break;
         case  GLUT_KEY_F1:
-        if (r_color < 1)  r_color +=  fraction;
+        if (r_color < 1)  r_color +=  col_fraction;
              break;
         case  GLUT_KEY_F2:
-        if (r_color > 0) r_color -=  fraction;
+        if (r_color > 0) r_color -=  col_fraction;
             break;
         case  GLUT_KEY_F3:
-        if (g_color < 1) g_color +=  fraction;
+        if (g_color < 1) g_color +=  col_fraction;
              break;
         case  GLUT_KEY_F4:
-        if (g_color > 0) g_color -=  fraction;
+        if (g_color > 0) g_color -=  col_fraction;
             break;
         case  GLUT_KEY_F5:
-        if (b_color < 1) b_color +=  fraction;
+        if (b_color < 1) b_color +=  col_fraction;
              break;
         case  GLUT_KEY_F6:
-        if (b_color > 0) b_color -=  fraction;
+        if (b_color > 0) b_color -=  col_fraction;
             break;
 
 
@@ -190,7 +188,7 @@ void drawTree()
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "Main");
-/*
+
 
     detect = new ROSAction("detector_node");
     grasp = new ROSAction("grasp_object");
@@ -208,28 +206,6 @@ int main(int argc, char **argv)
 
      sequence1 = new SequenceStarNode("seq1");
     root = new SelectorStarNode("root");
-
-
-
-*/
-    test1 = new ActionTestNode("A1");
-    test2 = new ActionTestNode("A2");
-    test3 = new ActionTestNode("A3");
-    test4 = new ActionTestNode("A4");
-    sequence1 = new SequenceStarNode("seq1");
-
-    dec = new DecoratorRetryNode("retry");
-
-
-    test1->SetBehavior(Failure);
-    test2->SetBehavior(Success);
-    test3->SetBehavior(Success);
-
-
-
-    test4->SetBehavior(Failure);
-
-    root = new SequenceStarNode("root");
 
 
 
@@ -253,7 +229,7 @@ int main(int argc, char **argv)
     try
     {
 
-/*
+
 
         sequence1->AddChild(posearm);
         sequence1->AddChild(grasp);
@@ -263,19 +239,6 @@ int main(int argc, char **argv)
         root->AddChild(done);
         root->AddChild(sequence1);
 
-
-*/
-        sequence1->AddChild(test2);
-        sequence1->AddChild(test1);
-        sequence1->AddChild(test3);
-
-        dec->AddChild(sequence1);
-
-
-        root->AddChild(dec);
-        root->AddChild(test4);
-
-        std::cout << "Depth !"<< GetDepth(root) << std::endl << std::endl;
 
 
         root->ResetColorState();

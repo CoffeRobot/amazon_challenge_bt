@@ -88,9 +88,10 @@ INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS} include)
 file(GLOB_RECURSE BTLibrary src/*.cpp)
 
 add_executable(tree src/main.cpp ${BTLibrary})
-#target_link_libraries(tree ${catkin_LIBRARIES} ${ALPROXIES_LIBRARIES} ${ALVALUE_LIBRARIES})
+
 add_dependencies(tree amazon_challenge_bt_actions_generate_messages_cpp)
 target_link_libraries(tree ${catkin_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
 
 #add_executable(add_two_ints_server ${PROJECT_SOURCE_DIR}/src/add_two_ints_server.cpp)
 #target_link_libraries(add_two_ints_server ${catkin_LIBRARIES})
