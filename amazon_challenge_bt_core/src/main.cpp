@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     ActionNode* detect = new ROSAction("detector_node");
     ActionNode* grasp = new ROSAction("grasp_object");
     ActionNode* drop = new ROSAction("drop_object");
-    ActionNode* posearm = new ROSAction("arm_position_server");
+    ActionNode* pregrasp = new ROSAction("pregrasp_server");
     ActionNode* remove = new ROSAction("remove_object");
 
 
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
     //parallel1->SetThreashold(2);
     selector1->AddChild(armposed);
-    selector1->AddChild(posearm);
+    selector1->AddChild(pregrasp);
     selector2->AddChild(grasped);
     selector2->AddChild(grasp);
 
