@@ -16,7 +16,9 @@ using namespace BT;
 ActionNode* detect;
 ActionNode* grasp;
 ActionNode* drop;
-ActionNode* posearm;
+ActionNode* pregrasp;
+ActionNode* arminit;
+
 ActionNode* removeobject;
 
 
@@ -190,10 +192,12 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "Main");
 
 
-    detect = new ROSAction("detector_node");
+    detect = new ROSAction("amazon_detector");
     grasp = new ROSAction("grasp_object");
     drop = new ROSAction("drop_object");
-    posearm = new ROSAction("arm_position_server");
+    pregrasp = new ROSAction("pregrasp_server");
+    arminit = new ROSAction("armInit_server");
+
     removeobject = new ROSAction("remove_object");
 
 
@@ -230,8 +234,9 @@ int main(int argc, char **argv)
     {
 
 
-
-        sequence1->AddChild(posearm);
+        sequence1->AddChild(arminit);
+        sequence1->AddChild(detect);
+        sequence1->AddChild(pregrasp);
         sequence1->AddChild(grasp);
         sequence1->AddChild(drop);
         sequence1->AddChild(removeobject);
