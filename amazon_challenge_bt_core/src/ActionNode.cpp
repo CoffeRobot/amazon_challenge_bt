@@ -11,6 +11,11 @@ ActionNode::~ActionNode() {}
 
 bool ActionNode::WriteState(NodeState StateToBeSet)
 {
+
+    if(StateToBeSet != Idle)
+    {
+        SetColorState(StateToBeSet);
+    }
     // Lock acquistion
     boost::lock_guard<boost::mutex> LockGuard(StateMutex);
 
@@ -22,4 +27,11 @@ bool ActionNode::WriteState(NodeState StateToBeSet)
 
     State = StateToBeSet;
     return true;
+}
+
+int ActionNode::GetType()
+{
+    // Lock acquistion
+
+    return ACTION;
 }

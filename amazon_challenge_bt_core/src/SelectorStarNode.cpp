@@ -1,16 +1,16 @@
-#include <amazon_challenge_bt_core/SequenceNode.h>
+#include <amazon_challenge_bt_core/SelectorStarNode.h>
 
 using namespace BT;
 
-SequenceNode::SequenceNode(std::string Name) : ControlNode::ControlNode(Name)
+SelectorStarNode::SelectorStarNode(std::string Name) : ControlNode::ControlNode(Name)
 {
     // Thread start
-    Thread = boost::thread(&SequenceNode::Exec, this);
+    Thread = boost::thread(&SelectorStarNode::Exec, this);
 }
 
-SequenceNode::~SequenceNode() {}
+SelectorStarNode::~SelectorStarNode() {}
 
-void SequenceNode::Exec()
+void SelectorStarNode::Exec()
 {
     int i;
 
@@ -22,6 +22,7 @@ void SequenceNode::Exec()
 
     // Simulating a tick for myself
     Semaphore.Signal();
+    i = 0; //Initialize the index of the child to tick
 
     while(true)
     {
@@ -41,7 +42,7 @@ void SequenceNode::Exec()
             std::cout << Name << " ticked, ticking children..." << std::endl;
 
             // For each child:
-            for (i = 0; i<M; i++)
+            while(i<M)
             {
                 if (ChildNodes[i]->Type == Action)
                 {
@@ -85,16 +86,21 @@ void SequenceNode::Exec()
                 }
 
                 // 3) if the child state is not a success:
-                if(ChildStates[i] != Success)
+                if(ChildStates[i] != Failure)
                 {
+
+
                     // 3.1) the node state is equal to it;
                     SetNodeState(ChildStates[i]);
 
                     // 3.2) state reset;
                     WriteState(Idle);
-
+                    if (ChildStates[i] == Success)
+                    {
+                     i = 0; // Final State of rhe selector node. Child index reinitialized
+                     }
                     // 3.3) all the next action or control child nodes must be halted:
-                    for(int j=i+1; j<M; j++)
+                   /* for(int j=i+1; j<M; j++)
                     {
                         if (ChildNodes[j]->Type != Action && ChildStates[j] == Running)
                         {
@@ -125,10 +131,8 @@ void SequenceNode::Exec()
 
                                 std::cout << Name << " halting of child number " << j << " failed!" << std::endl;
                             }
-                            else
-                            {
-                                std::cout << Name << " halting of child number " << j << " succedeed!" << std::endl;
-                            }
+
+                            std::cout << Name << " halting of child number " << j << " succedeed!" << std::endl;
                         }
                         else if (ChildNodes[j]->Type == Action && ChildNodes[j]->ReadState() != Idle)
                         {
@@ -136,21 +140,24 @@ void SequenceNode::Exec()
                             // 3.3.3.1) ticking it without saving its returning state;
                             ChildNodes[j]->Semaphore.Signal();
                         }
-                    }
+                    }*/
 
                     std::cout << Name << " returning " << ChildStates[i] << "!" << std::endl;
 
-                    // 3.4) the "for" loop must end here.
+                    // 3.4) the while loop must end here.
                     break;
+                } else if(ChildStates[i] == Failure)//if child i has failed the selector star node can tick the next child
+                {
+                    i ++;
                 }
             }
 
             if (i == M)
             {
-                // 4) if all of its children return "success":
-                // 4.1) the node state must be "success";
-                SetNodeState(Success);
-
+                // 4) if all of its children return "failure":
+                // 4.1) the node state must be "failure";
+                SetNodeState(Failure);
+                i = 0;
                 // 4.2) resetting the state;
                 WriteState(Idle);
 
@@ -200,7 +207,7 @@ void SequenceNode::Exec()
                     ChildNodes[j]->Semaphore.Signal();
                 }
 
-                // updating its vector cell
+                // updating its vector cell;
                 ChildStates[j] = Idle;
             }
 
@@ -210,10 +217,10 @@ void SequenceNode::Exec()
     }
 }
 
-int SequenceNode::GetType()
+
+int SelectorStarNode::GetType()
 {
     // Lock acquistion
 
-    return SEQUENCE;
+    return SELECTORSTAR;
 }
-

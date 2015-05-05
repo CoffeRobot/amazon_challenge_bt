@@ -1,16 +1,16 @@
-#ifndef SELECTORNODE_H
-#define SELECTORNODE_H
+#ifndef SELECTORSTARNODE_H
+#define SELECTORSTARNODE_H
 
 #include <amazon_challenge_bt_core/ControlNode.h>
 
 namespace BT
 {
-    class SelectorNode : public ControlNode
+    class SelectorStarNode : public ControlNode
     {
     public:
         // Constructor
-        SelectorNode(std::string Name);
-        ~SelectorNode();
+        SelectorStarNode(std::string Name);
+        ~SelectorStarNode();
 	int GetType();
         // The method that is going to be executed by the thread
         void Exec();

@@ -13,9 +13,20 @@ bool ConditionNode::Halt() {}
 
 bool ConditionNode::WriteState(NodeState StateToBeSet)
 {
+
+    if(StateToBeSet != Idle)
+    {
+        SetColorState(StateToBeSet);
+    }
     // Lock acquistion
     boost::lock_guard<boost::mutex> LockGuard(StateMutex);
 
     State = StateToBeSet;
     return true;
+}
+int ConditionNode::GetType()
+{
+    // Lock acquistion
+
+    return CONDITION;
 }

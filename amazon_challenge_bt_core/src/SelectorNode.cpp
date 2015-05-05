@@ -207,3 +207,11 @@ void SelectorNode::Exec()
         }
     }
 }
+
+
+int SelectorNode::GetType()
+{
+    // Lock acquistion
+
+    return SELECTOR;
+}

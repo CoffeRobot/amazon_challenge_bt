@@ -1,16 +1,16 @@
-#include <amazon_challenge_bt_core/SequenceNode.h>
+#include <amazon_challenge_bt_core/SequenceStarNode.h>
 
 using namespace BT;
 
-SequenceNode::SequenceNode(std::string Name) : ControlNode::ControlNode(Name)
+SequenceStarNode::SequenceStarNode(std::string Name) : ControlNode::ControlNode(Name)
 {
     // Thread start
-    Thread = boost::thread(&SequenceNode::Exec, this);
+    Thread = boost::thread(&SequenceStarNode::Exec, this);
 }
 
-SequenceNode::~SequenceNode() {}
+SequenceStarNode::~SequenceStarNode() {}
 
-void SequenceNode::Exec()
+void SequenceStarNode::Exec()
 {
     int i;
 
@@ -22,14 +22,17 @@ void SequenceNode::Exec()
 
     // Simulating a tick for myself
     Semaphore.Signal();
+    i = 0; //I initialize the index of the child to tick
 
     while(true)
     {
         // Waiting for a tick to come
         Semaphore.Wait();
 
+
         if(ReadState() == Exit)
         {
+            i = 0;
             // The behavior tree is going to be destroied
             return;
         }
@@ -41,7 +44,7 @@ void SequenceNode::Exec()
             std::cout << Name << " ticked, ticking children..." << std::endl;
 
             // For each child:
-            for (i = 0; i<M; i++)
+            while (i<M)
             {
                 if (ChildNodes[i]->Type == Action)
                 {
@@ -87,14 +90,18 @@ void SequenceNode::Exec()
                 // 3) if the child state is not a success:
                 if(ChildStates[i] != Success)
                 {
+
+
                     // 3.1) the node state is equal to it;
                     SetNodeState(ChildStates[i]);
-
                     // 3.2) state reset;
                     WriteState(Idle);
-
+                    if (ChildStates[i] == Failure)
+                    {
+                        i = 0; // Final State of rhe selector node. Child index reinitialized
+                    }
                     // 3.3) all the next action or control child nodes must be halted:
-                    for(int j=i+1; j<M; j++)
+                 /*   for(int j=i+1; j<M; j++)
                     {
                         if (ChildNodes[j]->Type != Action && ChildStates[j] == Running)
                         {
@@ -136,26 +143,35 @@ void SequenceNode::Exec()
                             // 3.3.3.1) ticking it without saving its returning state;
                             ChildNodes[j]->Semaphore.Signal();
                         }
-                    }
+                    }*/
 
                     std::cout << Name << " returning " << ChildStates[i] << "!" << std::endl;
 
                     // 3.4) the "for" loop must end here.
                     break;
+                } else if (ChildStates[i] == Success) //If the child i returns success, the sequence star node can tick the next child
+                {
+                    i++;
                 }
+
+
+
             }
 
             if (i == M)
             {
                 // 4) if all of its children return "success":
                 // 4.1) the node state must be "success";
-                SetNodeState(Success);
+                SetNodeState(Success); // Final State of rhe selector node. Child index reinitialized
 
+                i = 0;
                 // 4.2) resetting the state;
                 WriteState(Idle);
 
                 std::cout << Name << " returning " << Success << "!" << std::endl;
             }
+
+
         }
         else
         {
@@ -206,14 +222,17 @@ void SequenceNode::Exec()
 
             // Resetting the node state
             WriteState(Idle);
+
         }
+
     }
+
 }
 
-int SequenceNode::GetType()
+
+int SequenceStarNode::GetType()
 {
     // Lock acquistion
 
-    return SEQUENCE;
+    return SEQUENCESTAR;
 }
-

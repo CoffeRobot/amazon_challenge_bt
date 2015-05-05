@@ -46,3 +46,20 @@ bool ControlNode::WriteState(NodeState StateToBeSet)
     State = StateToBeSet;
     return true;
 }
+
+
+std::vector<TreeNode*> ControlNode::GetChildren()
+{
+    return ChildNodes;
+}
+
+
+void ControlNode::ResetColorState()
+{
+
+    SetColorState(Idle);
+    for(int i = 0; i < ChildNodes.size(); i++)
+    {
+        ChildNodes[i]->ResetColorState();
+    }
+}
