@@ -17,7 +17,7 @@ ActionNode* detect;
 ActionNode* grasp;
 ActionNode* drop;
 ActionNode* pregrasp;
-ActionNode* arminit;
+ActionNode* base_torso_head_init;
 
 ActionNode* removeobject;
 
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
     grasp = new ROSAction("grasp_object");
     drop = new ROSAction("drop_object");
     pregrasp = new ROSAction("pregrasp_server");
-    arminit = new ROSAction("armInit_server");
+    base_torso_head_init = new ROSAction("base_torso_head_init_server");
 
     removeobject = new ROSAction("remove_object");
 
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
     {
 
 
-        sequence1->AddChild(arminit);
+        sequence1->AddChild(base_torso_head_init);
         sequence1->AddChild(detect);
         sequence1->AddChild(pregrasp);
         sequence1->AddChild(grasp);
