@@ -1,9 +1,13 @@
 #ifndef BEHAVIORTREE_H
 #define BEHAVIORTREE_H
-
+#include <amazon_challenge_bt_core/Draw.h>
 #include <amazon_challenge_bt_core/ParallelNode.h>
 #include <amazon_challenge_bt_core/SelectorNode.h>
 #include <amazon_challenge_bt_core/SequenceNode.h>
+
+#include <amazon_challenge_bt_core/SelectorStarNode.h>
+#include <amazon_challenge_bt_core/SequenceStarNode.h>
+#include <amazon_challenge_bt_core/DecoratorRetryNode.h>
 
 #include <amazon_challenge_bt_core/Actions/ActionTestNode.h>
 #include <amazon_challenge_bt_core/Conditions/ConditionTestNode.h>
@@ -14,6 +18,8 @@
 
 
 #include <amazon_challenge_bt_core/Exceptions.h>
+
+
 
 #include <string>
 #include <map>

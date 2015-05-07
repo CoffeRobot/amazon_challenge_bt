@@ -37,6 +37,12 @@ NodeState TreeNode::GetNodeState()
 
 void TreeNode::SetNodeState(NodeState StateToBeSet)
 {
+
+    if(StateToBeSet != Idle)
+    {
+        SetColorState(StateToBeSet);
+    }
+
     // Lock acquistion
     boost::unique_lock<boost::mutex> UniqueLock(StateMutex);
 
@@ -58,3 +64,31 @@ NodeState TreeNode::ReadState()
 
     return State;
 }
+
+
+NodeState TreeNode::ReadColorState()
+{
+    // Lock acquistion
+
+    return ColorState;
+}
+
+void TreeNode::SetColorState(NodeState ColorStateToBeSet)
+{
+    // Lock acquistion
+
+    // State update
+    ColorState = ColorStateToBeSet;
+}
+
+
+
+/*
+int TreeNode::GetType()
+{
+    // Lock acquistion
+
+    //return EMPTY;
+}
+
+*/

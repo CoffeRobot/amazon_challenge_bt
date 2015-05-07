@@ -13,6 +13,7 @@ namespace BT
     public:
         LeafNode(std::string Name);
         ~LeafNode();
+	void ResetColorState();
     };
 }
 

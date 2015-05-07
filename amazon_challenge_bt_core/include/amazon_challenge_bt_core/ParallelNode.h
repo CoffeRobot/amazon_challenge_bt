@@ -30,7 +30,7 @@ namespace BT
 
         // the method used to set N
         void SetThreashold(unsigned int N);
-
+	int GetType();
         // The method that is going to be executed by the thread
         void Exec();
     };

@@ -521,3 +521,11 @@ void ParallelNode::Exec()
         }
     }
 }
+
+
+int ParallelNode::GetType()
+{
+    // Lock acquistion
+
+    return PARALLEL;
+}

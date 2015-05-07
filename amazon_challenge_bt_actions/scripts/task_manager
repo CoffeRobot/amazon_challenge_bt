@@ -151,11 +151,17 @@ class TaskManager:
             self.pub_rate.sleep()
 
 
-task_manager = TaskManager()
-rp = rospkg.RosPack()
-json_path = rp.get_path('amazon_challenge_bt_actions')
-json_path = json_path + '/src/example_full.json'
-task_manager.read_json_list(json_path)
-task_manager.publish_next_task()
+
+if __name__=='__main__':
+    rospy.init_node('objectslist')
+    task_manager = TaskManager()
+    rp = rospkg.RosPack()
+    json_pkg = rospy.get_param('/json_file/package', 'amazon_challenge_bt_actions')
+    json_relative_path = rospy.get_param('/json_file/relative_path', 'src/example.json')
+    json_pkg_path = rp.get_path(json_pkg)
+    json_path = json_pkg_path + '/' + json_relative_path
+    task_manager.read_json_list(json_path)
+    task_manager.publish_next_task()
+
 
 

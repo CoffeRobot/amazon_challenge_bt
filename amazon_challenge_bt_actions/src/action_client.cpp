@@ -8,11 +8,18 @@ int main (int argc, char **argv)
 {
   ros::init(argc, argv, "test_action");
 
+  // get ROS parameter for action server name
+
+  std::string action_server_name;
+  ros::NodeHandle nh("~");
+
+  nh.param("action_server_name", action_server_name, std::string("action"));
+
   // create the action client
   // true causes the client to spin its own thread
-  actionlib::SimpleActionClient<amazon_challenge_bt_actions::BTAction> ac("action", true);
+  actionlib::SimpleActionClient<amazon_challenge_bt_actions::BTAction> ac(action_server_name, true);
 	amazon_challenge_bt_actions::BTResult node_result;
-  ROS_INFO("Waiting for action server to start.");
+  ROS_INFO("Waiting for action server %s to start.", action_server_name.c_str());
   // wait for the action server to start
   ac.waitForServer(); //will wait for infinite time
 
