@@ -8,6 +8,8 @@ from std_msgs.msg import Int32
 import actionlib #needed to call receive_update whenever needed
 import amazon_challenge_bt_actions.msg #contains the action message for receive_update
 import rospkg
+from grasping.generate_object_dict import *
+
 
 class TaskManager:
   # create messages that are used to publish feedback/result
@@ -26,35 +28,68 @@ class TaskManager:
     	self._action_name = 'objectslist'
   	
     	self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
-
-
     	self._as.start()
         self.objects_list = []
         self.data = []
         self.bins = {}
         self.task_list = []
+        self.object_dictionary = objDict()
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size = 0)
-
-        #rospy.Subscriber('/amazon_task_update', Int32, self.receive_update)
+        self.bin_pub = rospy.Publisher('amazon_bin_items', String, queue_size = 0)
         self.pub_rate = rospy.Rate(30)
 
     def add_bin_content(self, bin_id):
         content = self.data['bin_contents']
-        self.bins[bin_id] = content[bin_id]
+        items = content[bin_id]
+
+        num_items = len(items)
+
+        bin_str = "[" + str(num_items) + ","
+        for i in range(0, num_items):
+            if i < num_items - 1:
+                bin_str = bin_str + items[i] + ","
+            else:
+                bin_str = bin_str + items[i]
+
+        bin_str += "]"
+
+        self.bins[bin_id] = bin_str
 
     def init_taks_list(self):
         tasks = self.data['work_order']
         for task in tasks:
             bin = task['bin']
             item = task['item']
-            t = [len(self.bins[bin]), item, bin]
+            difficult = 0
+            try:
+                tmp_dic_entry = self.object_dictionary.getEntry(item)
+                if not tmp_dic_entry[4]:
+                    difficult = 1
+                print(item + ' ' + str(tmp_dic_entry[4]))
+            except Exception, e:
+                difficult = 1
+                print(item + ' not in the dictionary ')
+                print(e)
+
+
+
+            t = [len(self.bins[bin]), item, bin, difficult]
             self.task_list.append(t)
 
-        self.task_list.sort(key=lambda tup: tup[0])
+        self.task_list.sort(key=lambda tup: (tup[3], tup[0] ))
 
-        #next_task = self.task_list[0]
-        #next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
-        #print(next_task_msg)
+        self.print_task_list()
+
+    def print_task_list(self):
+
+        rospy.loginfo('--- PLANNED TASK LIST ---')
+
+        for t in self.task_list:
+            task_string = "-> o: " + t[1] + " b: " + t[2] + " n: " + str(t[0]) + " d: " + str(t[3])
+            rospy.loginfo(task_string)
+
+        rospy.loginfo('------------------------')
+
 
     def receive_update(self,goal):
         rospy.loginfo('Goal Received')
@@ -105,17 +140,21 @@ class TaskManager:
     def publish_next_task(self):
         while not rospy.is_shutdown():
             next_task_msg = '[empty,empty]'
+            next_bin_content = '[]'
             if len(self.task_list) > 0:
                 next_task = self.task_list[0]
                 next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
+                next_bin_content = self.bins[next_task[2]]
+
             self.pub.publish(next_task_msg)
+            self.bin_pub.publish(str(next_bin_content))
             self.pub_rate.sleep()
 
 
 task_manager = TaskManager()
 rp = rospkg.RosPack()
 json_path = rp.get_path('amazon_challenge_bt_actions')
-json_path = json_path + '/src/example.json'
+json_path = json_path + '/src/example_full.json'
 task_manager.read_json_list(json_path)
 task_manager.publish_next_task()
 
