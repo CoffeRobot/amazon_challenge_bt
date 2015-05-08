@@ -71,9 +71,9 @@ class TaskManager:
                 print(item + ' not in the dictionary ')
                 print(e)
 
+            data = self.bins[bin].replace('[',',').split(',')
 
-
-            t = [len(self.bins[bin]), item, bin, difficult]
+            t = [data[1], item, bin, difficult]
             self.task_list.append(t)
 
         self.task_list.sort(key=lambda tup: (tup[3], tup[0] ))
@@ -161,6 +161,7 @@ if __name__=='__main__':
     json_pkg_path = rp.get_path(json_pkg)
     json_path = json_pkg_path + '/' + json_relative_path
     task_manager.read_json_list(json_path)
+    print(json_path)
     task_manager.publish_next_task()
 
 
