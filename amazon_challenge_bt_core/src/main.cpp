@@ -3,7 +3,7 @@
 #include <amazon_challenge_bt_core/BehaviorTree.h>
 #include <typeinfo>
 #include <math.h>       /* pow */
-
+#include <std_srvs/Empty.h>
 
 
 using namespace BT;
@@ -186,11 +186,30 @@ void drawTree()
 
 }
 
+bool start;
+
+bool kickAssSrvCallback(std_srvs::EmptyRequest &req, std_srvs::EmptyResponse &res)
+{
+    ROS_INFO("[Behavior Tree]: Starting to kick ass!!!");
+    start = true;
+    return true;
+}
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "Main");
+    start = false;
 
+    ros::NodeHandle nh("~");
+    ros::ServiceServer srv = nh.advertiseService("/kick_ass", kickAssSrvCallback);
+    ros::Rate r(1.0);
+
+    ROS_INFO("Waiting for input to start the behavior tree!");
+    while(!start && ros::ok())
+    {
+        ros::spinOnce();
+        r.sleep();
+    }
 
     detect = new ROSAction("amazon_detector");
     grasp = new ROSAction("grasp_object");
