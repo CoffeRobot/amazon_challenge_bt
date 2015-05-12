@@ -11,158 +11,258 @@ import rospkg
 from grasping.generate_object_dict import *
 
 
+class PickingBin:
+    def __init__(self, bin_id, row, col):
+        self.bin_id = bin_id
+        self.row = row
+        self.col = col
+        self.object_list = list()
+
+    def __str__(self):
+        return "PickingBin: " + self.bin_id + " (" + str(self.row) + ", " + str(self.col) + ")"
+
+
+class PickingTask:
+    def __init__(self, object_id, bin, difficulty):
+        self.object_id = object_id
+        self.bin = bin
+        self.difficulty = difficulty
+        self.retries = 0
+
+    def __str__(self):
+        return "PickingTask: " + self.object_id[0:10] + " @" + str(self.bin) + " n" + str(len(self.bin.object_list)) + " d" + str(self.difficulty) + " r" + str(self.retries)
+
+    def __cmp__(self, other):
+        r = 0 # Objects are equal
+
+        if self.bin.row == 0 and other.bin.row > 0:
+                return +1
+        elif not self.bin.row == 0 and other.bin.row == 0:
+                return -1
+        else:
+            # I am not in the top row, apply sorting by attributes
+            if self.retries > other.retries:
+                return +1
+            elif self.retries < other.retries:
+                return -1
+            else:
+                if self.difficulty < other.difficulty:
+                    return -1
+                elif self.difficulty > other.difficulty:
+                    return +1
+                else:
+                    if len(self.bin.object_list) <= len(other.bin.object_list):
+                        return -1;
+                    else:
+                        return 0;
+
+        raise("Comparison case not impemented!")
+
 class TaskManager:
-  # create messages that are used to publish feedback/result
+    # create messages that are used to publish feedback/result
     _feedback = amazon_challenge_bt_actions.msg.ObjectsListFeedback()
     _result   = amazon_challenge_bt_actions.msg.ObjectsListResult()
    
     TASK_COMPLETED = 1
     TASK_CANCELLED = 2
     TASK_POSTPONED = 3
-    #rospy.init_node('objectslist')
 
-    
     def __init__(self):
-	#Initialize the action (ACTIONLIB)
+        """
+        Constructor of the TaskManager.
+        """
+
+        # Initialize the action (ACTIONLIB) ----------------------------------------------------------------------------
         rospy.init_node('objectslist')
-    	self._action_name = 'objectslist'
-  	
-    	self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
-    	self._as.start()
-        self.objects_list = []
-        self.data = []
-        self.bins = {}
-        self.task_list = []
-        self.object_dictionary = objDict()
+        self._action_name = 'objectslist'
+        self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
+        self._as.start()
+
+        # Initialize publisher -----------------------------------------------------------------------------------------
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size = 0)
         self.bin_pub = rospy.Publisher('amazon_bin_items', String, queue_size = 0)
         self.pub_rate = rospy.Rate(30)
 
-    def add_bin_content(self, bin_id):
-        content = self.data['bin_contents']
-        items = content[bin_id]
+        # Initialize members -------------------------------------------------------------------------------------------
+        self.json_data = [] # Stores the JSON data for debug reasons
+        self.object_dictionary = objDict() # For looking up properties of objects
 
-        num_items = len(items)
+        self.pickingBins = dict() # List of all picking bin objects
 
-        bin_str = "[" + str(num_items) + ","
-        for i in range(0, num_items):
-            if i < num_items - 1:
-                bin_str = bin_str + items[i] + ","
-            else:
-                bin_str = bin_str + items[i]
+        self.pickingBins["bin_A"] = PickingBin("bin_A", 0, 0)
+        self.pickingBins["bin_B"] = PickingBin("bin_B", 0, 1)
+        self.pickingBins["bin_C"] = PickingBin("bin_C", 0, 2)
 
-        bin_str += "]"
+        self.pickingBins["bin_D"] = PickingBin("bin_D", 1, 0)
+        self.pickingBins["bin_E"] = PickingBin("bin_E", 1, 1)
+        self.pickingBins["bin_F"] = PickingBin("bin_F", 1, 2)
 
-        self.bins[bin_id] = bin_str
+        self.pickingBins["bin_G"] = PickingBin("bin_G", 2, 0)
+        self.pickingBins["bin_H"] = PickingBin("bin_H", 2, 1)
+        self.pickingBins["bin_I"] = PickingBin("bin_I", 2, 2)
 
-    def init_taks_list(self):
-        tasks = self.data['work_order']
+        self.pickingBins["bin_J"] = PickingBin("bin_J", 3, 0)
+        self.pickingBins["bin_K"] = PickingBin("bin_K", 3, 1)
+        self.pickingBins["bin_L"] = PickingBin("bin_L", 3, 2)
+
+        self.pickingTasks = list() # List of all picking tasks
+
+    def parse_bin_contents(self, data):
+        """
+        Read in the parsing tree in data and extract the object and bin configuration
+        """
+
+        print("parse_bin_contents...")
+
+        content = data['bin_contents'] # JSON tree "bin_contents"
+        for bin_id in content:
+            #print("Bin: " + bin_id)
+            items = content[bin_id]
+            for i in range(0, len(items)):
+                #print(items[i])
+                # Add the object to the bin
+                self.pickingBins[bin_id].object_list.append(items[i])
+
+    def parse_work_order(self, data):
+        """
+        Read in the parsing tree in data and extract the work order
+        """
+
+        tasks = data['work_order']
+
         for task in tasks:
             bin = task['bin']
             item = task['item']
+
+            # Compute difficulty of the item.
             difficult = 0
             try:
                 tmp_dic_entry = self.object_dictionary.getEntry(item)
                 if not tmp_dic_entry[4]:
                     difficult = 1
-                print(item + ' ' + str(tmp_dic_entry[4]))
+                #print(item + ' ' + str(tmp_dic_entry[4]))
             except Exception, e:
                 difficult = 1
                 print(item + ' not in the dictionary ')
                 print(e)
 
-            data = self.bins[bin].replace('[',',').split(',')
+            pt = PickingTask(item, self.pickingBins[bin], difficult)
+            self.pickingTasks.append(pt)
 
-            t = [data[1], item, bin, difficult]
-            self.task_list.append(t)
+    def print_picking_task_list(self):
+        """
+        Print the order of the current picking task list.
+        :return:
+        """
+        print("PickingTask list: ")
+        for t in self.pickingTasks:
+            print(t)
 
-        self.task_list.sort(key=lambda tup: (tup[3], tup[0] ))
-
-        self.print_task_list()
-
-    def print_task_list(self):
-
-        rospy.loginfo('--- PLANNED TASK LIST ---')
-
-        for t in self.task_list:
-            task_string = "-> o: " + t[1] + " b: " + t[2] + " n: " + str(t[0]) + " d: " + str(t[3])
-            rospy.loginfo(task_string)
-
-        rospy.loginfo('------------------------')
-
-
-    def receive_update(self,goal):
+    def receive_update(self, goal):
+        """
+        Process feedback from the Behavior Tree.
+        :param goal:
+        :return:
+        """
         rospy.loginfo('Goal Received')
         value = goal.parameter
 
-        if len(self.task_list) < 1:
-           self._feedback.status = 1 # a status 1 means that there no more objects in the list
-           self._result.status = self._feedback.status
-           rospy.loginfo('Task list updated')
-	   self._as.set_succeeded(self._result)
-           return
+        if len(self.pickingTasks) < 1:
+            # No tasks left
+            self._feedback.status = 1 # a status 1 means that there no more objects in the list
+            self._result.status = self._feedback.status
+            rospy.loginfo('Task list updated (no tasks left)')
+            self._as.set_succeeded(self._result)
+        else:
+            # Tasks left
+            if value == self.TASK_COMPLETED:
+                # Remove the current task, it has been completed
+                self.pickingTasks.pop(0)
+            elif value == self.TASK_CANCELLED:
+                # Remove the current task, it cannot be completed anymore
+                self.pickingTasks.pop(0)
+            elif value == self.TASK_POSTPONED:
+                # Try this task later again.
+                self.pickingTasks[0].retries += 1
+                self.pickingTasks = sorted(self.pickingTasks)
 
-        if value == self.TASK_COMPLETED:
-            self.task_list.pop(0)
-        elif value == self.TASK_CANCELLED:
-            self.task_list.pop(0)
-        elif value == self.TASK_POSTPONED:
-            task = self.task_list.pop(0)
-            self.task_list.append(task)
-	#set the feedback on the action (ACTIONLIB)
-        self._feedback.status = 0 # a status 0 means that there are still objects in the list
-        self._result.status = self._feedback.status
-        rospy.loginfo('Task list updated')
-        self._as.set_succeeded(self._result)
+            #set the feedback on the action (ACTIONLIB)
+            self._feedback.status = 0 # a status 0 means that there are still objects in the list
+            self._result.status = self._feedback.status
+            rospy.loginfo('Task list updated (and tasks are left to do)')
+            self._as.set_succeeded(self._result)
   
-
+        self.print_picking_task_list()
+        
     def read_json_list(self, file_path):
+        """
+        Read in the json file and create the task list.
+        :param file_path:
+        :return:
+        """
 
+        # Parse the JSON file structure --------------------------------------------------------------------------------
         json_data = open(file_path)
         self.data = json.load(json_data)
         json_data.close()
 
-        self.add_bin_content('bin_A')
-        self.add_bin_content('bin_B')
-        self.add_bin_content('bin_C')
-        self.add_bin_content('bin_D')
-        self.add_bin_content('bin_E')
-        self.add_bin_content('bin_F')
-        self.add_bin_content('bin_G')
-        self.add_bin_content('bin_H')
-        self.add_bin_content('bin_I')
-        self.add_bin_content('bin_J')
-        self.add_bin_content('bin_K')
-        self.add_bin_content('bin_L')
+        # --------------------------------------------------------------------------------------------------------------
+        self.parse_bin_contents(self.data)
+        self.parse_work_order(self.data)
 
-        self.init_taks_list()
+        print("Before sorting")
+        self.print_picking_task_list()
+
+        self.pickingTasks = sorted(self.pickingTasks)
+        print("After sorting")
+        self.print_picking_task_list()
+        # --------------------------------------------------------------------------------------------------------------
 
     def publish_next_task(self):
+        """
+        Publish which the next task and the next bin via ROS.
+        :return:
+        """
+
         while not rospy.is_shutdown():
             next_task_msg = '[empty,empty]'
             next_bin_content = '[]'
-            if len(self.task_list) > 0:
-                next_task = self.task_list[0]
-                next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
-                next_bin_content = self.bins[next_task[2]]
+
+            if len(self.pickingTasks) > 0:
+                # There are tasks left
+                next_task = self.pickingTasks[0]
+                # Format "[bin_id,object_id]"
+                next_task_msg = '[' + next_task.bin.bin_id + "," + next_task.object_id + ']'
+                next_bin_content = next_task.bin.object_list
 
             self.pub.publish(next_task_msg)
             self.bin_pub.publish(str(next_bin_content))
             self.pub_rate.sleep()
 
 
-
 if __name__=='__main__':
+    """
+    Main function of this node.
+    """
+
     rospy.init_node('objectslist')
     task_manager = TaskManager()
     rp = rospkg.RosPack()
+
+    # Get parameters from server (where is the json file?)
     json_pkg = rospy.get_param('/json_file/package', 'amazon_challenge_bt_actions')
     json_relative_path = rospy.get_param('/json_file/relative_path', 'src/example.json')
     json_pkg_path = rp.get_path(json_pkg)
     json_path = json_pkg_path + '/' + json_relative_path
+
+    # Set debug json file
+    json_path = "/home/johannes/amazon_challenge_ws/src/amazon_challenge/data/original.json"
+
+    # Load the json file
     task_manager.read_json_list(json_path)
-    print(json_path)
-    task_manager.publish_next_task()
+
+    task_manager.publish_next_task() # Blocking call to start the publisher
+
 
 
 
