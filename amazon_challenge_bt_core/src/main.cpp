@@ -103,8 +103,8 @@ void display()
 {
 
     glClearColor( r_color, g_color, b_color, 0.1);
-    glutTimerFunc(50, timerCB, 50); // draw every 50 ms
-
+    glutTimerFunc(500, timerCB, 500); // draw every 500 ms
+    ros::Duration(0.2).sleep();
     // clear the draw buffer .
     glClear(GL_COLOR_BUFFER_BIT);   // Erase everything
     updateTree(root, x , y, x_offset*pow(2,GetDepth(root)-1) , 0.1 );
@@ -267,6 +267,7 @@ int main(int argc, char **argv)
 
         root->ResetColorState();
 
+        ros::Rate loop_rate(1.0);
         while(ros::ok())
         {
 
@@ -286,7 +287,7 @@ int main(int argc, char **argv)
             }
             // Simulating the tick period
 
-            boost::this_thread::sleep(boost::posix_time::milliseconds(TickPeriod_milliseconds));
+            loop_rate.sleep();
 
         }
 
