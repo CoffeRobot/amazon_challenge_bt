@@ -61,6 +61,7 @@ class TaskManager:
             bin = task['bin']
             item = task['item']
             difficult = 0
+            times_tried = 0
             try:
                 tmp_dic_entry = self.object_dictionary.getEntry(item)
                 if not tmp_dic_entry[4]:
@@ -73,10 +74,10 @@ class TaskManager:
 
             data = self.bins[bin].replace('[',',').split(',')
 
-            t = [data[1], item, bin, difficult]
+            t = [data[1], item, bin, difficult, times_tried]
             self.task_list.append(t)
 
-        self.task_list.sort(key=lambda tup: (tup[3], tup[0] ))
+        self.task_list.sort(key=lambda tup: (tup[3], tup[0], tup[4] ))
 
         self.print_task_list()
 
@@ -107,7 +108,7 @@ class TaskManager:
         elif value == self.TASK_CANCELLED:
             self.task_list.pop(0)
         elif value == self.TASK_POSTPONED:
-            task = self.task_list.pop(0)
+            task = self.task_list.pop(0)#here task list sort
             self.task_list.append(task)
 	#set the feedback on the action (ACTIONLIB)
         self._feedback.status = 0 # a status 0 means that there are still objects in the list
