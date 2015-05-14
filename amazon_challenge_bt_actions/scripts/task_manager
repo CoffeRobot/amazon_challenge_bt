@@ -5,55 +5,62 @@ import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Int32
 
-import actionlib #needed to call receive_update whenever needed
-import amazon_challenge_bt_actions.msg #contains the action message for receive_update
+import actionlib  # needed to call receive_update whenever needed
+import amazon_challenge_bt_actions.msg  # contains the action message for receive_update
+from amazon_challenge_bt_actions.srv import *
 import rospkg
 from grasping.generate_object_dict import *
 
 
 class TaskManager:
-  # create messages that are used to publish feedback/result
+    # create messages that are used to publish feedback/result
     _feedback = amazon_challenge_bt_actions.msg.ObjectsListFeedback()
-    _result   = amazon_challenge_bt_actions.msg.ObjectsListResult()
-   
+    _result = amazon_challenge_bt_actions.msg.ObjectsListResult()
+
     TASK_COMPLETED = 1
     TASK_CANCELLED = 2
     TASK_POSTPONED = 3
-    #rospy.init_node('objectslist')
+    # rospy.init_node('objectslist')
 
-    
+
     def __init__(self):
-	#Initialize the action (ACTIONLIB)
+        #Initialize the action (ACTIONLIB)
         rospy.init_node('objectslist')
-    	self._action_name = 'objectslist'
-  	
-    	self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction, execute_cb=self.receive_update, auto_start = False)
-    	self._as.start()
+        self._action_name = 'objectslist'
+
+        self._as = actionlib.SimpleActionServer(self._action_name, amazon_challenge_bt_actions.msg.ObjectsListAction,
+                                                execute_cb=self.receive_update, auto_start=False)
+        self._as.start()
         self.objects_list = []
         self.data = []
         self.bins = {}
+        self.bin_content = {}
         self.task_list = []
         self.object_dictionary = objDict()
-        self.pub = rospy.Publisher('amazon_next_task', String, queue_size = 0)
-        self.bin_pub = rospy.Publisher('amazon_bin_items', String, queue_size = 0)
+        self.pub = rospy.Publisher('amazon_next_task', String, queue_size=0)
+        self.bin_pub = rospy.Publisher('amazon_bin_items', String, queue_size=0)
         self.pub_rate = rospy.Rate(30)
 
     def add_bin_content(self, bin_id):
         content = self.data['bin_contents']
         items = content[bin_id]
-
+        bin_items = []
         num_items = len(items)
 
         bin_str = "[" + str(num_items) + ","
         for i in range(0, num_items):
+            bin_items.append(items[i])
+
+
             if i < num_items - 1:
                 bin_str = bin_str + items[i] + ","
             else:
                 bin_str = bin_str + items[i]
 
         bin_str += "]"
-
+        self.bin_content[bin_id] = bin_items
         self.bins[bin_id] = bin_str
+
 
     def init_taks_list(self):
         tasks = self.data['work_order']
@@ -61,7 +68,6 @@ class TaskManager:
             bin = task['bin']
             item = task['item']
             difficult = 0
-            times_tried = 0
             try:
                 tmp_dic_entry = self.object_dictionary.getEntry(item)
                 if not tmp_dic_entry[4]:
@@ -72,12 +78,12 @@ class TaskManager:
                 print(item + ' not in the dictionary ')
                 print(e)
 
-            data = self.bins[bin].replace('[',',').split(',')
+            data = self.bins[bin].replace('[', ',').split(',')
 
-            t = [data[1], item, bin, difficult, times_tried]
+            t = [data[1], item, bin, difficult]
             self.task_list.append(t)
 
-        self.task_list.sort(key=lambda tup: (tup[3], tup[0], tup[4] ))
+        self.task_list.sort(key=lambda tup: (tup[3], tup[0] ))
 
         self.print_task_list()
 
@@ -92,30 +98,30 @@ class TaskManager:
         rospy.loginfo('------------------------')
 
 
-    def receive_update(self,goal):
+    def receive_update(self, goal):
         rospy.loginfo('Goal Received')
         value = goal.parameter
 
         if len(self.task_list) < 1:
-           self._feedback.status = 1 # a status 1 means that there no more objects in the list
-           self._result.status = self._feedback.status
-           rospy.loginfo('Task list updated')
-	   self._as.set_succeeded(self._result)
-           return
+            self._feedback.status = 1  # a status 1 means that there no more objects in the list
+            self._result.status = self._feedback.status
+            rospy.loginfo('Task list updated')
+            self._as.set_succeeded(self._result)
+            return
 
         if value == self.TASK_COMPLETED:
             self.task_list.pop(0)
         elif value == self.TASK_CANCELLED:
             self.task_list.pop(0)
         elif value == self.TASK_POSTPONED:
-            task = self.task_list.pop(0)#here task list sort
+            task = self.task_list.pop(0)
             self.task_list.append(task)
-	#set the feedback on the action (ACTIONLIB)
-        self._feedback.status = 0 # a status 0 means that there are still objects in the list
+        #set the feedback on the action (ACTIONLIB)
+        self._feedback.status = 0  # a status 0 means that there are still objects in the list
         self._result.status = self._feedback.status
         rospy.loginfo('Task list updated')
         self._as.set_succeeded(self._result)
-  
+
 
     def read_json_list(self, file_path):
 
@@ -141,19 +147,27 @@ class TaskManager:
     def publish_next_task(self):
         while not rospy.is_shutdown():
             next_task_msg = '[empty,empty]'
-            next_bin_content = '[]'
+            #next_bin_content = '[]'
             if len(self.task_list) > 0:
                 next_task = self.task_list[0]
                 next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
-                next_bin_content = self.bins[next_task[2]]
+             #   next_bin_content = self.bins[next_task[2]]
 
             self.pub.publish(next_task_msg)
-            self.bin_pub.publish(str(next_bin_content))
+            #self.bin_pub.publish(str(next_bin_content))
             self.pub_rate.sleep()
 
 
+    def get_bin_info(self,req):
+        #next_bin_content = '[]'
+        if len(self.task_list) > 0:
+            next_task = self.task_list[0]
+            next_bin_content =  self.bin_content[next_task[2]]
+            print('Length: ' + str(len(next_bin_content)))
+        return BinTriggerResponse(next_bin_content)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     rospy.init_node('objectslist')
     task_manager = TaskManager()
     rp = rospkg.RosPack()
@@ -163,7 +177,5 @@ if __name__=='__main__':
     json_path = json_pkg_path + '/' + json_relative_path
     task_manager.read_json_list(json_path)
     print(json_path)
+    s = rospy.Service('bin_trigger', BinTrigger, task_manager.get_bin_info)
     task_manager.publish_next_task()
-
-
-
