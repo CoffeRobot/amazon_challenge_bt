@@ -1,7 +1,6 @@
 #include <amazon_challenge_bt_core/Actions/ROSAction.h>
 
 
-
 using namespace BT;
 
 enum Status {RUNNING,SUCCESS, FAILURE};
@@ -59,7 +58,7 @@ void ROSAction::Exec()
                     //ac.waitForResult(ros::Duration(30.0));
             do{
                 node_result = *(ac.getResult());//checking the result
-
+                ros::Duration(1.0).sleep();
                     } while(node_result.status == RUNNING && ReadState() == Running);
             ROS_INFO("The Server Has Replied");
 
