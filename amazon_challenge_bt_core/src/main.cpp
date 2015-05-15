@@ -20,6 +20,7 @@ ActionNode* pregrasp;
 ActionNode* base_torso_head_init;
 
 ActionNode* removeobject;
+ActionNode* nextobject;
 
 
 
@@ -39,7 +40,9 @@ float b_color = 1;
 bool reactiveBT = false;
 
 SequenceStarNode* sequence1;
+SequenceStarNode* sequence2;
 SelectorStarNode* root;
+SelectorStarNode* selector1;
 DecoratorRetryNode* dec;
 
 
@@ -218,6 +221,7 @@ int main(int argc, char **argv)
     base_torso_head_init = new ROSAction("base_torso_head_init_server");
 
     removeobject = new ROSAction("remove_object");
+    nextobject = new ROSAction("next_object");
 
 
     detected = new ROSCondition("object_detected");
@@ -227,7 +231,9 @@ int main(int argc, char **argv)
     done = new ROSCondition("list_done");
 
 
-     sequence1 = new SequenceStarNode("seq1");
+    sequence1 = new SequenceStarNode("seq1");
+    sequence2 = new SequenceStarNode("seq2");
+    selector1 = new SelectorStarNode("selector1");
     root = new SelectorStarNode("root");
 
 
@@ -253,13 +259,18 @@ int main(int argc, char **argv)
     {
 
 
+
+        sequence2->AddChild(detect);
+        sequence2->AddChild(pregrasp);
+        sequence2->AddChild(grasp);
+
+
+        selector1->AddChild(sequence2);
+        selector1->AddChild(nextobject);
         sequence1->AddChild(base_torso_head_init);
-        sequence1->AddChild(detect);
-        sequence1->AddChild(pregrasp);
-        sequence1->AddChild(grasp);
+        sequence1->AddChild(selector1);
         sequence1->AddChild(drop);
         sequence1->AddChild(removeobject);
-
         root->AddChild(done);
         root->AddChild(sequence1);
 
