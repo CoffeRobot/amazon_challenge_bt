@@ -220,6 +220,7 @@ int main(int argc, char **argv)
     pregrasp = new ROSAction("pregrasp_server");
     base_torso_head_init = new ROSAction("base_torso_head_init_server");
 
+
     removeobject = new ROSAction("remove_object");
     nextobject = new ROSAction("next_object");
 
@@ -273,8 +274,6 @@ int main(int argc, char **argv)
         sequence1->AddChild(removeobject);
         root->AddChild(done);
         root->AddChild(sequence1);
-
-
 
         root->ResetColorState();
 

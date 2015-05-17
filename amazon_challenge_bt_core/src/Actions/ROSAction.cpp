@@ -1,5 +1,15 @@
 #include <amazon_challenge_bt_core/Actions/ROSAction.h>
 
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <signal.h>
 
 using namespace BT;
 
@@ -54,6 +64,9 @@ void ROSAction::Exec()
         // Perform action...
 
                     ROS_INFO("I am running the request to %s",Name.c_str());
+                    stopAllOtherProcesses();
+                    startProcess();
+                    ros::Duration(2.0).sleep();
                     ac.sendGoal(goal);
                     //ac.waitForResult(ros::Duration(30.0));
             do{
@@ -63,6 +76,7 @@ void ROSAction::Exec()
             ROS_INFO("The Server Has Replied");
 
                     std::cout << Name << " RETURNING " << node_result.status << "!" << std::endl;
+                    startAllOtherProcesses();
 
         if(ReadState() == Exit)
         {
@@ -151,3 +165,143 @@ bool ROSAction::Halt()
     State = Halted;
     return true;
 }
+
+
+std::string ROSAction::getProcessName()
+{
+    std::string as_name = Name;
+    std::string process_name = Name;
+
+    if (as_name=="base_torso_head_init_server")
+    {
+        process_name = "base_torso_head";
+    }
+
+    else if (as_name=="amazon_detector")
+    {
+        process_name = "detector";
+    }
+
+    else if (as_name=="pregrasp_server")
+    {
+        process_name = "pregrasp";
+    }
+
+    else if (as_name=="grasp_object")
+    {
+        process_name = "grasping";
+    }
+
+    else if (as_name=="drop_object")
+    {
+        process_name = "dropping";
+    }
+
+    else
+    {
+        process_name = "";
+    }
+
+    return process_name;
+}
+
+void ROSAction::startProcess()
+{
+    std::string process_name = getProcessName();
+
+    if(process_name!="")
+    {
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+}
+
+void ROSAction::stopProcess()
+{
+
+    std::string process_name = getProcessName();
+
+    if(process_name!="")
+    {
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+}
+
+void ROSAction::stopAllOtherProcesses()
+{
+    if(Name!="base_torso_head_init_server")
+    {
+        std::string process_name = "base_torso_head";
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+
+    if(Name!="amazon_detector")
+    {
+        std::string process_name = "detector";
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+
+    if(Name!="pregrasp_server")
+    {
+        std::string process_name = "pregrasp";
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+
+    if(Name!="grasp_object")
+    {
+        std::string process_name = "grasping";
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+
+    if(Name!="drop_object")
+    {
+        std::string process_name = "dropping";
+        std::cout << "stopping process " << process_name << std::endl;
+        system((std::string("pkill -STOP ") + process_name).c_str());
+    }
+
+}
+
+void ROSAction::startAllOtherProcesses()
+{
+    if(Name!="base_torso_head_init_server")
+    {
+        std::string process_name = "base_torso_head";
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+
+    if(Name!="amazon_detector")
+    {
+        std::string process_name = "detector";
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+
+    if(Name!="pregrasp_server")
+    {
+        std::string process_name = "pregrasp";
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+
+    if(Name!="grasp_object")
+    {
+        std::string process_name = "grasping";
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+
+    if(Name!="drop_object")
+    {
+        std::string process_name = "dropping";
+        std::cout << "starting process " << process_name << std::endl;
+        system((std::string("pkill -CONT ") + process_name).c_str());
+    }
+}
+
