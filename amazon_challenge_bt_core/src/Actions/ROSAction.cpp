@@ -62,11 +62,11 @@ void ROSAction::Exec()
         std::cout << Name << " returning " << Running << "!" << std::endl;
         node_result.status = RUNNING;
         // Perform action...
-
+        stopAllOtherProcesses();
+        startProcess();
                     ROS_INFO("I am running the request to %s",Name.c_str());
-                    stopAllOtherProcesses();
-                    startProcess();
-                    ros::Duration(2.0).sleep();
+
+                    ros::Duration(3.0).sleep();
                     ac.sendGoal(goal);
                     //ac.waitForResult(ros::Duration(30.0));
             do{
@@ -213,6 +213,19 @@ void ROSAction::startProcess()
     {
         std::cout << "starting process " << process_name << std::endl;
         system((std::string("pkill -CONT ") + process_name).c_str());
+
+        if (process_name=="grasping")
+        {
+            process_name = "detector";
+            std::cout << "starting process " << process_name << std::endl;
+            system((std::string("pkill -CONT ") + process_name).c_str());
+
+            std::cout << "starting process pr2_cam_switch" << std::endl;
+            system("pkill -CONT pr2_cam_switch");
+
+            std::cout << "starting process periodic_cloud" << std::endl;
+            system("pkill -CONT periodic_cloud");
+        }
     }
 }
 
@@ -225,6 +238,7 @@ void ROSAction::stopProcess()
     {
         std::cout << "stopping process " << process_name << std::endl;
         system((std::string("pkill -STOP ") + process_name).c_str());
+
     }
 }
 
@@ -265,6 +279,23 @@ void ROSAction::stopAllOtherProcesses()
         system((std::string("pkill -STOP ") + process_name).c_str());
     }
 
+
+//        std::cout << "stopping process rviz" << std::endl;
+//        system("pkill -STOP rviz");
+
+
+//    std::cout << "stopping process rqt_amazon" << std::endl;
+//    system("pkill -STOP rqt_amazon");
+
+    if(Name!="amazon_detector")
+    {
+        std::cout << "stopping process pr2_cam_switch" << std::endl;
+        system("pkill -STOP pr2_cam_switch");
+
+        std::cout << "stopping process periodic_cloud" << std::endl;
+        system("pkill -STOP periodic_cloud");
+    }
+
 }
 
 void ROSAction::startAllOtherProcesses()
@@ -303,5 +334,14 @@ void ROSAction::startAllOtherProcesses()
         std::cout << "starting process " << process_name << std::endl;
         system((std::string("pkill -CONT ") + process_name).c_str());
     }
+
+//    {
+//        std::cout << "starting process rviz" << std::endl;
+//        system("pkill -CONT rviz");
+//    }
+
+//    std::cout << "starting process rqt_amazon" << std::endl;
+//    system("pkill -CONT rqt_amazon");
+
 }
 

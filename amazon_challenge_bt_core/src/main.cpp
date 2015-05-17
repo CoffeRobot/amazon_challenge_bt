@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <math.h>       /* pow */
 #include <std_srvs/Empty.h>
-
+#include <signal.h>
 
 using namespace BT;
 
@@ -308,6 +308,16 @@ int main(int argc, char **argv)
     {
         std::cout << Exception.what() << std::endl;
     }
+
+    system("pkill -CONT base_torso_head");
+    system("pkill -CONT detector");
+    system("pkill -CONT pregrasp");
+    system("pkill -CONT grasping");
+    system("pkill -CONT dropping");
+    system("pkill -CONT pr2_cam_switch");
+    system("pkill -CONT periodic_cloud");
+    system("pkill -CONT rviz");
+    system("pkill -CONT rqt_amazon");
 
     return 0;
 }
