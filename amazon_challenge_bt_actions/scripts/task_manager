@@ -36,7 +36,7 @@ class TaskManager:
         self.object_dictionary = objDict()
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size = 0)
         self.bin_pub = rospy.Publisher('amazon_bin_items', String, queue_size = 0)
-        self.pub_rate = rospy.Rate(30)
+        self.pub_rate = rospy.Rate(1)
 
     def add_bin_content(self, bin_id):
         content = self.data['bin_contents']
