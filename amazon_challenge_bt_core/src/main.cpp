@@ -277,6 +277,8 @@ int main(int argc, char **argv)
 
         root->ResetColorState();
 
+        system("pkill -STOP rviz");
+
         ros::Rate loop_rate(1.0);
         while(ros::ok())
         {

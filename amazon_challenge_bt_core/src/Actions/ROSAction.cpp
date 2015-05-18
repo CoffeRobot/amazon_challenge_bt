@@ -216,10 +216,18 @@ void ROSAction::startProcess()
 
         if (process_name=="grasping")
         {
-            process_name = "detector";
-            std::cout << "starting process " << process_name << std::endl;
-            system((std::string("pkill -CONT ") + process_name).c_str());
+            std::cout << "starting process detector" << std::endl;
+            system("pkill -CONT detector");
 
+            std::cout << "starting process pr2_cam_switch" << std::endl;
+            system("pkill -CONT pr2_cam_switch");
+
+            std::cout << "starting process periodic_cloud" << std::endl;
+            system("pkill -CONT periodic_cloud");
+        }
+
+        if(process_name=="detector")
+        {
             std::cout << "starting process pr2_cam_switch" << std::endl;
             system("pkill -CONT pr2_cam_switch");
 
