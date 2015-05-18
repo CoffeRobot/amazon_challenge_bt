@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 
         root->ResetColorState();
 
-        system("pkill -STOP rviz");
+//        system("pkill -STOP rviz");
 
         ros::Rate loop_rate(1.0);
         while(ros::ok())
@@ -311,15 +311,15 @@ int main(int argc, char **argv)
         std::cout << Exception.what() << std::endl;
     }
 
-    system("pkill -CONT base_torso_head");
-    system("pkill -CONT detector");
-    system("pkill -CONT pregrasp");
-    system("pkill -CONT grasping");
-    system("pkill -CONT dropping");
-    system("pkill -CONT pr2_cam_switch");
-    system("pkill -CONT periodic_cloud");
-    system("pkill -CONT rviz");
-    system("pkill -CONT rqt_amazon");
+//    system("pkill -CONT base_torso_head");
+//    system("pkill -CONT detector");
+//    system("pkill -CONT pregrasp");
+//    system("pkill -CONT grasping");
+//    system("pkill -CONT dropping");
+//    system("pkill -CONT pr2_cam_switch");
+//    system("pkill -CONT periodic_cloud");
+//    system("pkill -CONT rviz");
+//    system("pkill -CONT rqt_amazon");
 
     return 0;
 }

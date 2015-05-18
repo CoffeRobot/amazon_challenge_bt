@@ -62,21 +62,21 @@ void ROSAction::Exec()
         std::cout << Name << " returning " << Running << "!" << std::endl;
         node_result.status = RUNNING;
         // Perform action...
-        stopAllOtherProcesses();
-        startProcess();
+//            stopAllOtherProcesses();
+//            startProcess();
                     ROS_INFO("I am running the request to %s",Name.c_str());
 
-                    ros::Duration(3.0).sleep();
+//                    ros::Duration(3.0).sleep();
                     ac.sendGoal(goal);
                     //ac.waitForResult(ros::Duration(30.0));
             do{
                 node_result = *(ac.getResult());//checking the result
-                ros::Duration(1.0).sleep();
+                ros::Duration(0.1).sleep();
                     } while(node_result.status == RUNNING && ReadState() == Running);
             ROS_INFO("The Server Has Replied");
 
                     std::cout << Name << " RETURNING " << node_result.status << "!" << std::endl;
-                    startAllOtherProcesses();
+//                    startAllOtherProcesses();
 
         if(ReadState() == Exit)
         {
