@@ -35,6 +35,7 @@ class TaskManager:
         self.data = []
         self.bins = {}
         self.bin_content = {}
+
         self.task_list = []
         self.object_dictionary = objDict()
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size=0)
@@ -108,14 +109,28 @@ class TaskManager:
             rospy.loginfo('Task list updated')
             self._as.set_succeeded(self._result)
             return
+        if value > 0:
+            if value == self.TASK_COMPLETED:
+                self.task_list.pop(0)
+            elif value == self.TASK_CANCELLED:
+                self.task_list.pop(0)
+            elif value == self.TASK_POSTPONED:
+                task = self.task_list.pop(0)
+                self.task_list.append(task)
+        else: #The Task manager has to remove one object from the list
 
-        if value == self.TASK_COMPLETED:
-            self.task_list.pop(0)
-        elif value == self.TASK_CANCELLED:
-            self.task_list.pop(0)
-        elif value == self.TASK_POSTPONED:
-            task = self.task_list.pop(0)
-            self.task_list.append(task)
+            if len(self.task_list) > 0:
+                next_task = self.task_list[0]
+                bin_content_new = []
+                bin_here = self.bin_content[next_task[2]]
+
+
+            for i in range(0, len(bin_here)):
+                if i != -value:
+                    bin_content_new.append(bin_here[i])
+            self.bin_content[next_task[2]] = bin_content_new
+
+
         #set the feedback on the action (ACTIONLIB)
         self._feedback.status = 0  # a status 0 means that there are still objects in the list
         self._result.status = self._feedback.status
@@ -151,10 +166,10 @@ class TaskManager:
             if len(self.task_list) > 0:
                 next_task = self.task_list[0]
                 next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
-             #   next_bin_content = self.bins[next_task[2]]
+                next_bin_content = self.bins[next_task[2]]
 
             self.pub.publish(next_task_msg)
-            #self.bin_pub.publish(str(next_bin_content))
+            self.bin_pub.publish(str(next_bin_content))
             self.pub_rate.sleep()
 
 
