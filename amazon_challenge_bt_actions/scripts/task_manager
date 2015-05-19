@@ -206,8 +206,12 @@ if __name__ == '__main__':
     rp = rospkg.RosPack()
     json_pkg = rospy.get_param('/json_file/package', 'amazon_challenge_bt_actions')
     json_relative_path = rospy.get_param('/json_file/relative_path', 'src/example_full.json')
-    json_pkg_path = rp.get_path(json_pkg)
-    json_path = json_pkg_path + '/' + json_relative_path
+    contest = rospy.get_param('/contest', True)
+    if contest:
+        json_path = os.getenv('HOME') + '/contest.json'
+    else:
+        json_pkg_path = rp.get_path(json_pkg)
+        json_path = json_pkg_path + '/' + json_relative_path
     task_manager.read_json_list(json_path)
     print(json_path)
     s = rospy.Service('bin_trigger', BinTrigger, task_manager.get_bin_info)
