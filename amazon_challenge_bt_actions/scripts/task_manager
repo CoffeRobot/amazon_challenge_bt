@@ -236,7 +236,7 @@ class TaskManager:
                 next_bin_content = next_task.bin.object_list
 
             self.pub.publish(next_task_msg)
-            self.bin_pub.publish(str(next_bin_content))
+            self.bin_pub.publish(str(len(next_bin_content)) + " " + str(next_bin_content))
             self.pub_rate.sleep()
 
 
