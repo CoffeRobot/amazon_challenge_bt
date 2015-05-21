@@ -180,11 +180,12 @@ class TaskManager:
     def publish_next_task(self):
         while not rospy.is_shutdown():
             next_task_msg = '[empty,empty]'
-            #next_bin_content = '[]'
+            next_bin_content = '[]'
             if len(self.task_list) > 0:
                 next_task = self.task_list[0]
                 next_task_msg = '[' + next_task[2] + "," + next_task[1] + ']'
-                next_bin_content = self.bins[next_task[2]]
+                #next_bin_content = self.bins[next_task[2]]
+                next_bin_content = [str(len(self.bin_content[next_task[2]]))] + self.bin_content[next_task[2]]
 
             self.pub.publish(next_task_msg)
             self.bin_pub.publish(str(next_bin_content))
