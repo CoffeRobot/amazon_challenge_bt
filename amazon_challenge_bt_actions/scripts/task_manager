@@ -10,6 +10,7 @@ import amazon_challenge_bt_actions.msg  # contains the action message for receiv
 from amazon_challenge_bt_actions.srv import *
 import rospkg
 from grasping.generate_object_dict import *
+import os
 
 
 class TaskManager:
