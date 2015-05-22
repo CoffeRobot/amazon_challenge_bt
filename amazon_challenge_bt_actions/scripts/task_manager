@@ -97,6 +97,7 @@ class TaskManager:
                 tmp_dic_entry = self.object_dictionary.getEntry(item)
                 if not tmp_dic_entry[4]:
                     difficult = 1
+                    continue
                 print(item + ' ' + str(tmp_dic_entry[4]))
             except Exception, e:
                 difficult = 1
@@ -157,8 +158,18 @@ class TaskManager:
                 row_id = 2 - id_max
                 if row_id < 0: row_id += 4
 
-            data = self.bins[bin].replace('[', ',').split(',')
+            try:
+                tmp_dic_entry = self.object_dictionary.getEntry(item)
+                if not tmp_dic_entry[4]:
+                    difficult = 1
+                    continue
+                print(item + ' ' + str(tmp_dic_entry[4]))
+            except Exception, e:
+                difficult = 1
+                print(item + ' not in the dictionary ')
+                print(e)
 
+            data = self.bins[bin].replace('[', ',').split(',')
             t = [data[1], item, bin, difficult, retried, row_id, single_item]
             task_list_new.append(t)
 
