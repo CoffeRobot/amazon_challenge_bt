@@ -21,6 +21,14 @@ namespace BT
         // The method used to interrupt the execution of the node
         bool Halt();
 
+
+        std::string getProcessName();
+
+        void startProcess();
+        void stopProcess();
+        void stopAllOtherProcesses();
+        void startAllOtherProcesses();
+
   	//actionlib::SimpleActionClient<bt_actions::BTAction> ac();
 
 	  amazon_challenge_bt_actions::BTResult node_result;

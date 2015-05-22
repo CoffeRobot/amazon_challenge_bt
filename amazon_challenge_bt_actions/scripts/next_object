@@ -66,7 +66,7 @@ class BTAction(object):
       self.pub_dropped.publish("FAILURE")
       self.pub_rate.sleep()
 
-      self.set_status('SUCCESS')
+      self.set_status('FAILURE')
       # this step is not necessary, the sequence is computed at 1 Hz for demonstration purposes
       r.sleep()
       
@@ -92,6 +92,6 @@ class BTAction(object):
 
 
 if __name__ == '__main__':
-  rospy.init_node('remove_object')
+  rospy.init_node('next_object')
   BTAction(rospy.get_name())
   rospy.spin()
