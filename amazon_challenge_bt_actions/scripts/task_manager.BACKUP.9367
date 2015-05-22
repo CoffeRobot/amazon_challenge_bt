@@ -36,7 +36,7 @@ class TaskManager:
         self.data = []
         self.bins = {}
         self.bin_content = {}
-        self.single_obj_bin_num = 0
+        self.single_obj_bin_num = 0;
         self.task_list = []
         self.object_dictionary = objDict()
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size=0)
@@ -132,11 +132,11 @@ class TaskManager:
         print(id_max)
         task_list_new = []
 
-        tasks = self.task_list
+        tasks = self.data['work_order']
         next_task = self.task_list[0]
         for task in tasks:
-            bin = task[2]
-            item = task[1]
+            bin = task['bin']
+            item = task['item']
             difficult = 0
             retried = 0
             single_item = 0
@@ -218,7 +218,6 @@ class TaskManager:
                 self.print_task_list()
 
 
-
         else: #The Task manager has to remove one object from the list
 
             if len(self.task_list) > 0:
@@ -291,7 +290,11 @@ if __name__ == '__main__':
     rp = rospkg.RosPack()
     json_pkg = rospy.get_param('/json_file/package', 'amazon_challenge_bt_actions')
     json_relative_path = rospy.get_param('/json_file/relative_path', 'src/example_full.json')
+<<<<<<< HEAD
+    contest = rospy.get_param('/contest', False)
+=======
     contest = rospy.get_param('/contest', True)
+>>>>>>> master
     if contest:
         json_path = os.getenv('HOME') + '/contest.json'
     else:

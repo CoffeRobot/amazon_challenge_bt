@@ -36,7 +36,7 @@ class TaskManager:
         self.data = []
         self.bins = {}
         self.bin_content = {}
-        self.single_obj_bin_num = 0
+
         self.task_list = []
         self.object_dictionary = objDict()
         self.pub = rospy.Publisher('amazon_next_task', String, queue_size=0)
@@ -71,33 +71,21 @@ class TaskManager:
             item = task['item']
             difficult = 0
             retried = 0
-            single_item = 0
             if bin == 'bin_A' or bin == 'bin_B' or bin == 'bin_C' :
-                retried = 1
+                retried = 2
                 row_id = 3
 
             elif  bin == 'bin_J' or bin == 'bin_K' or bin == 'bin_L' :
                 row_id = 0
-                if len(self.bin_content[bin]) == 1:
-
-                    single_item -= 1
-                    self.single_obj_bin_num += 1
             elif  bin == 'bin_G' or bin == 'bin_H' or bin == 'bin_I' :
                 row_id = 1
-                if len(self.bin_content[bin]) == 1:
-
-                    single_item -= 1
-                    self.single_obj_bin_num += 1
             elif  bin == 'bin_D' or bin == 'bin_E' or bin == 'bin_F' :
                 row_id = 2
-                if len(self.bin_content[bin]) == 1:
-                    single_item -= 1
-                    self.single_obj_bin_num += 1
+
             try:
                 tmp_dic_entry = self.object_dictionary.getEntry(item)
                 if not tmp_dic_entry[4]:
                     difficult = 1
-                    continue
                 print(item + ' ' + str(tmp_dic_entry[4]))
             except Exception, e:
                 difficult = 1
@@ -106,10 +94,10 @@ class TaskManager:
 
             data = self.bins[bin].replace('[', ',').split(',')
 
-            t = [data[1], item, bin, difficult, retried, row_id, single_item]
+            t = [data[1], item, bin, difficult, retried, row_id]
             self.task_list.append(t)
 
-        self.task_list.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] ))
+        self.task_list.sort(key=lambda tup: (tup[4],tup[5],tup[3], tup[0] ))
 
         self.print_task_list()
 
@@ -124,63 +112,6 @@ class TaskManager:
         rospy.loginfo('------------------------')
 
 
-
-
-
-    def set_row_ids(self,id_max):
-        print('---------------------RESET ROW ID----------------------')
-        print(id_max)
-        task_list_new = []
-
-        tasks = self.task_list
-        next_task = self.task_list[0]
-        for task in tasks:
-            bin = task[2]
-            item = task[1]
-            difficult = 0
-            retried = 0
-            single_item = 0
-            if bin == 'bin_A' or bin == 'bin_B' or bin == 'bin_C' :
-                retried = 1
-
-                row_id = 3 - id_max
-                if row_id < 0: row_id += 4
-
-            elif  bin == 'bin_J' or bin == 'bin_K' or bin == 'bin_L' :
-                row_id = 0 - id_max
-                if row_id < 0: row_id += 4
-
-            elif  bin == 'bin_G' or bin == 'bin_H' or bin == 'bin_I' :
-                row_id = 1 - id_max
-                if row_id < 0: row_id += 4
-
-            elif  bin == 'bin_D' or bin == 'bin_E' or bin == 'bin_F' :
-                row_id = 2 - id_max
-                if row_id < 0: row_id += 4
-
-            try:
-                tmp_dic_entry = self.object_dictionary.getEntry(item)
-                if not tmp_dic_entry[4]:
-                    difficult = 1
-                    continue
-                print(item + ' ' + str(tmp_dic_entry[4]))
-            except Exception, e:
-                difficult = 1
-                print(item + ' not in the dictionary ')
-                print(e)
-
-            data = self.bins[bin].replace('[', ',').split(',')
-            t = [data[1], item, bin, difficult, retried, row_id, single_item]
-            task_list_new.append(t)
-
-
-        task_list_new.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] )) #resort
-        self.task_list = task_list_new
-        self.print_task_list()
-
-
-
-
     def receive_update(self, goal):
         rospy.loginfo('Goal Received')
         value = goal.parameter
@@ -193,28 +124,14 @@ class TaskManager:
             return
         if value > 0:
             if value == self.TASK_COMPLETED:
-                task = self.task_list.pop(0)
-                if task[6] < 0:
-                    self.single_obj_bin_num -= 1
-                    if self.single_obj_bin_num < 1: #no more single object bin
-                        self.set_row_ids(task[5])
-
-            elif value == self.TASK_CANCELLED:#never used
+                self.task_list.pop(0)
+            elif value == self.TASK_CANCELLED:
                 self.task_list.pop(0)
             elif value == self.TASK_POSTPONED:
                 task = self.task_list.pop(0)
-                if task[6] >= 0:task[4] +=1 #increase the number of times tried
+                task[4] +=1 #increase the number of times tried
                 self.task_list.append(task)
-                self.task_list.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] )) #resort
-
-                if task[6] < 0:
-                    task[6] += 1
-                    self.single_obj_bin_num -= 1
-                    if self.single_obj_bin_num < 1: #no more single object bin
-                        self.set_row_ids(task[5])
-
-                print('POSTPONED')
-                print(self.single_obj_bin_num)
+                self.task_list.sort(key=lambda tup: (tup[4],tup[5],tup[3], tup[0] )) #resort
                 self.print_task_list()
 
 
