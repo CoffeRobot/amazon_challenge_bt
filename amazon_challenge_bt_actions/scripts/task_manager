@@ -73,7 +73,7 @@ class TaskManager:
             retried = 0
             single_item = 0
             if bin == 'bin_A' or bin == 'bin_B' or bin == 'bin_C' :
-                retried = 1
+                retried = 10
                 row_id = 3
 
             elif  bin == 'bin_J' or bin == 'bin_K' or bin == 'bin_L' :
@@ -112,6 +112,8 @@ class TaskManager:
         self.task_list.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] ))
 
         self.print_task_list()
+	print('single obj bin')
+	print(self.single_obj_bin_num)
 
     def print_task_list(self):
 
@@ -129,6 +131,18 @@ class TaskManager:
 
     def set_row_ids(self,id_max):
         print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
+        print('---------------------RESET ROW ID----------------------')
         print(id_max)
         task_list_new = []
 
@@ -141,7 +155,7 @@ class TaskManager:
             retried = 0
             single_item = 0
             if bin == 'bin_A' or bin == 'bin_B' or bin == 'bin_C' :
-                retried = 1
+                retried = 10
 
                 row_id = 3 - id_max
                 if row_id < 0: row_id += 4
@@ -203,15 +217,22 @@ class TaskManager:
                 self.task_list.pop(0)
             elif value == self.TASK_POSTPONED:
                 task = self.task_list.pop(0)
-                if task[6] >= 0:task[4] +=1 #increase the number of times tried
-                self.task_list.append(task)
-                self.task_list.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] )) #resort
+                if task[6] >= 0:
+                    task[4] +=1 #increase the number of times tried
 
+        	    reset = False
                 if task[6] < 0:
                     task[6] += 1
                     self.single_obj_bin_num -= 1
-                    if self.single_obj_bin_num < 1: #no more single object bin
+                    if self.single_obj_bin_num < 1: #no more single
+                        self.task_list.append(task)
                         self.set_row_ids(task[5])
+                        reset = True
+
+            	if not reset:
+            		self.task_list.append(task)
+               		self.task_list.sort(key=lambda tup: (tup[6],tup[4],tup[5],tup[3], tup[0] )) #resort
+
 
                 print('POSTPONED')
                 print(self.single_obj_bin_num)
