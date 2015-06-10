@@ -198,7 +198,7 @@ class TaskManager:
     def receive_update(self, goal):
         rospy.loginfo('Goal Received')
         value = goal.parameter
-
+        reset = False
         if len(self.task_list) < 1:
             self._feedback.status = 1  # a status 1 means that there no more objects in the list
             self._result.status = self._feedback.status
